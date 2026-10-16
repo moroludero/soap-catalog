@@ -80,6 +80,199 @@ footer .hero-divider {
   margin: 0 auto 1.25rem;
 }
 
+/* ---------------- Carousel ---------------- */
+.carousel {
+  position: relative;
+  max-width: 900px;
+  margin: 0 auto 1.5rem;
+  padding: 0 1.25rem;
+}
+
+.carousel-viewport {
+  overflow: hidden;
+  border-radius: 20px;
+  box-shadow: 0 20px 40px -20px rgba(58, 47, 40, 0.35);
+}
+
+.carousel-track {
+  display: flex;
+  transition: transform 0.6s cubic-bezier(.4,0,.2,1);
+}
+
+.carousel-slide {
+  position: relative;
+  flex: 0 0 100%;
+  aspect-ratio: 16 / 9;
+}
+
+.carousel-slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.carousel-caption {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 2.5rem 1.25rem 1rem;
+  background: linear-gradient(to top, rgba(58,34,20,0.72), transparent);
+}
+
+.carousel-caption span {
+  color: #fff;
+  font-family: "Fraunces", serif;
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+.carousel-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 253, 250, 0.85);
+  color: var(--ink);
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(58,47,40,0.18);
+  transition: background 0.2s ease, transform 0.15s ease;
+}
+
+.carousel-arrow:hover { background: #fff; transform: translateY(-50%) scale(1.06); }
+.carousel-arrow.prev { left: 1.75rem; }
+.carousel-arrow.next { right: 1.75rem; }
+
+.carousel-dots {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 0.9rem;
+}
+
+.carousel-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  border: none;
+  background: var(--border);
+  cursor: pointer;
+  padding: 0;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.carousel-dot.active {
+  background: var(--accent);
+  transform: scale(1.2);
+}
+
+/* ---------------- Lightbox ---------------- */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+
+.lightbox.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.lightbox-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(32, 24, 18, 0.72);
+}
+
+.lightbox-content {
+  position: relative;
+  z-index: 1;
+  background: var(--card);
+  border-radius: 18px;
+  max-width: 560px;
+  width: 92vw;
+  max-height: 88vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  transform: scale(0.96);
+  transition: transform 0.25s ease;
+}
+
+.lightbox.open .lightbox-content {
+  transform: scale(1);
+}
+
+.lightbox-content img {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  display: block;
+  border-radius: 18px 18px 0 0;
+}
+
+.lightbox-info {
+  padding: 1.1rem 1.3rem 1.4rem;
+}
+
+.lightbox-info h3 {
+  margin: 0.4rem 0 0.4rem;
+  font-size: 1.3rem;
+}
+
+.lightbox-info p {
+  margin: 0 0 1rem;
+  color: var(--muted);
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+
+.lightbox-close {
+  position: absolute;
+  top: 0.6rem;
+  right: 0.6rem;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(58,47,40,0.55);
+  color: #fff;
+  font-size: 1.3rem;
+  line-height: 1;
+  cursor: pointer;
+  z-index: 2;
+}
+
+.lightbox-arrow {
+  position: absolute;
+  top: 40%;
+  background: rgba(58,47,40,0.5);
+  color: #fff;
+  border: none;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 2;
+}
+
+.lightbox-arrow.prev { left: 0.6rem; }
+.lightbox-arrow.next { right: 0.6rem; }
+
 .tabs {
   position: sticky;
   top: 0;
@@ -153,6 +346,7 @@ footer .hero-divider {
 .card-img {
   overflow: hidden;
   aspect-ratio: 1 / 1;
+  cursor: pointer;
 }
 
 .card img {
@@ -263,6 +457,13 @@ footer {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .card, .tab, .order-btn, .float-wa { transition: none; }
+  .card, .tab, .order-btn, .float-wa, .carousel-track, .lightbox, .lightbox-content { transition: none; }
   .card { opacity: 1; transform: none; }
+}
+
+@media (max-width: 560px) {
+  .carousel-arrow { width: 34px; height: 34px; }
+  .carousel-arrow.prev { left: 0.6rem; }
+  .carousel-arrow.next { right: 0.6rem; }
+  .carousel-caption span { font-size: 1.05rem; }
 }
