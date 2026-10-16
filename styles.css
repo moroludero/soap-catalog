@@ -11,7 +11,7 @@
   --border: #ece0d2;
 }
 
-* { box-sizing: border-box; }
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
 html { scroll-behavior: smooth; }
 
@@ -21,7 +21,10 @@ body {
   background: var(--cream);
   color: var(--ink);
   position: relative;
+  overflow-x: hidden;
 }
+
+a, button { touch-action: manipulation; }
 
 h1, h2, h3 {
   font-family: "Fraunces", Georgia, serif;
@@ -154,24 +157,35 @@ footer .hero-divider {
 .carousel-dots {
   display: flex;
   justify-content: center;
-  gap: 0.5rem;
-  margin-top: 0.9rem;
+  gap: 0.25rem;
+  margin-top: 0.4rem;
 }
 
 .carousel-dot {
-  width: 9px;
-  height: 9px;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
   border: none;
-  background: var(--border);
+  background: transparent;
   cursor: pointer;
   padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.carousel-dot::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--border);
   transition: background 0.2s ease, transform 0.2s ease;
 }
 
-.carousel-dot.active {
+.carousel-dot.active::before {
   background: var(--accent);
-  transform: scale(1.2);
+  transform: scale(1.25);
 }
 
 /* ---------------- Lightbox ---------------- */
@@ -245,29 +259,36 @@ footer .hero-divider {
   position: absolute;
   top: 0.6rem;
   right: 0.6rem;
-  width: 34px;
-  height: 34px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   border: none;
-  background: rgba(58,47,40,0.55);
+  background: rgba(58,47,40,0.6);
   color: #fff;
-  font-size: 1.3rem;
+  font-size: 1.4rem;
   line-height: 1;
   cursor: pointer;
   z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .lightbox-arrow {
   position: absolute;
   top: 40%;
-  background: rgba(58,47,40,0.5);
+  background: rgba(58,47,40,0.55);
   color: #fff;
   border: none;
-  width: 38px;
-  height: 38px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   cursor: pointer;
   z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
 }
 
 .lightbox-arrow.prev { left: 0.6rem; }
@@ -436,8 +457,8 @@ footer {
 
 .float-wa {
   position: fixed;
-  right: 1.1rem;
-  bottom: 1.1rem;
+  right: calc(1.1rem + env(safe-area-inset-right, 0px));
+  bottom: calc(1.1rem + env(safe-area-inset-bottom, 0px));
   width: 56px;
   height: 56px;
   border-radius: 50%;
@@ -462,8 +483,17 @@ footer {
 }
 
 @media (max-width: 560px) {
-  .carousel-arrow { width: 34px; height: 34px; }
-  .carousel-arrow.prev { left: 0.6rem; }
-  .carousel-arrow.next { right: 0.6rem; }
+  .hero { padding: 2.5rem 1.25rem 1.5rem; }
+  .hero-sub { font-size: 0.92rem; }
+  .carousel { padding: 0 0.85rem; margin-bottom: 1.1rem; }
+  .carousel-slide { aspect-ratio: 4 / 3; }
+  .carousel-arrow { width: 36px; height: 36px; }
+  .carousel-arrow.prev { left: 0.5rem; }
+  .carousel-arrow.next { right: 0.5rem; }
+  .carousel-caption { padding: 2rem 1rem 0.85rem; }
   .carousel-caption span { font-size: 1.05rem; }
+  .grid { gap: 1.1rem; padding: 0.75rem 1rem 2.5rem; }
+  .tabs { padding: 0.75rem 0.75rem; gap: 0.4rem; }
+  .tab { padding: 0.5rem 0.95rem; font-size: 0.82rem; }
+  .float-wa { width: 52px; height: 52px; }
 }
