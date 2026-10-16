@@ -1,7 +1,7 @@
 // ---- EDIT THESE TWO LINES WITH THE REAL BUSINESS INFO ----
 const CONFIG = {
   businessName: "Jabones Artesanales",
-  whatsappNumber: "529990000000", // E.164 without +, e.g. 529981234567
+  whatsappNumber: "5353335221", // E.164 without +
 };
 // ------------------------------------------------------------
 
@@ -42,10 +42,11 @@ function renderProducts(filter) {
   const items = PRODUCTS.filter(p => filter === "todos" || p.category === filter);
   for (const p of items) {
     const card = document.createElement("article");
-    card.className = "card";
+    card.className = "card reveal";
     card.innerHTML = `
-      <img src="${p.img}" alt="${p.name}" loading="lazy">
+      <div class="card-img"><img src="${p.img}" alt="${p.name}" loading="lazy"></div>
       <div class="card-body">
+        <span class="tag">${p.category === "aromas" ? "Aroma" : "Recuerdo"}</span>
         <h3>${p.name}</h3>
         <p>${p.desc}</p>
         <a class="order-btn" href="${waLink(p.name)}" target="_blank" rel="noopener">Pedir por WhatsApp</a>
@@ -53,6 +54,26 @@ function renderProducts(filter) {
     `;
     grid.appendChild(card);
   }
+  observeReveals();
+}
+
+let revealObserver;
+function observeReveals() {
+  if (!("IntersectionObserver" in window)) {
+    document.querySelectorAll(".reveal").forEach(el => el.classList.add("in-view"));
+    return;
+  }
+  if (!revealObserver) {
+    revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("in-view");
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+  }
+  document.querySelectorAll(".reveal:not(.in-view)").forEach(el => revealObserver.observe(el));
 }
 
 function initTabs() {
@@ -69,6 +90,7 @@ function initTabs() {
 document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("business-name").textContent = CONFIG.businessName;
   document.getElementById("footer-wa").href = `https://wa.me/${CONFIG.whatsappNumber}`;
+  document.getElementById("float-wa").href = `https://wa.me/${CONFIG.whatsappNumber}`;
   initTabs();
   renderProducts("todos");
 });
