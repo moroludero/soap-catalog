@@ -97,17 +97,134 @@ Como la mayoría va a ver el sitio desde el teléfono, se hizo una pasada espec�
 - Color de la barra del navegador a juego con el sitio (`theme-color`)
 - Espaciados más ajustados y carrusel en proporción 4:3 en pantallas chicas (en vez de 16:9, que lo dejaba muy bajito)
 
-## 12. Pendientes
+## 12. Rediseño de colorimetría (2026-10-23)
 
-- [ ] Nombre real del negocio (hoy dice "Jabones Artesanales" como placeholder)
+Monica (como especialista en marketing) pidió una revisión de diseño real: sentía
+que los colores y el diseño general no estaban alineados con el negocio. Se
+investigaron tendencias 2026 de branding para jabonerías/boutiques antes de tocar
+código (ver fuentes abajo). Diagnóstico: la paleta anterior (terracota `#c2694a` +
+bronce `#b08a5a`) se usaba para *todo* — título, botones, tags, íconos — lo cual
+se veía plano y pesado, más de tienda de cerámica/aceite de oliva que de jabonería.
+
+Paleta nueva, con roles distintos en vez de un solo tono repetido:
+- **Salvia** (`#6f8f6a`) — accento primario, representa "100% vegetal". Se usa en
+  tabs activos, enlaces, y el tag de categoría **Aromas**.
+- **Arcilla/durazno** (`#d98f74`) — accento secundario, representa regalo/evento.
+  Se usa en el tag de categoría **Recuerditos**, dándole a cada línea de producto
+  un color distinto y reconocible de un vistazo.
+- **Dorado**, usado con moderación solo en un ícono de insignia de confianza.
+- Los títulos pasaron a un tono tinta neutro (no un color de marca saturado) —
+  así el acento se siente deliberado en vez de "todo del mismo color".
+
+Fuentes consultadas: [Color Trends 2026](https://wannathis.one/blog/color-trends-2026-for-designers-and-brands), [Trending Colours in Retail 2026](https://marketstallco.com.au/?p=37396).
+
+## 13. Rediseño total de estructura (2026-10-26)
+
+Monica pidió un cambio de estructura real, no solo de color ("la estructura sigue
+siendo la misma, no me gusta"). Se reconstruyó la arquitectura de información
+completa:
+
+- **Header con nav fija** (Aromas / Recuerditos / Cómo pedir) + selector de idioma
+  + botón de WhatsApp — antes no había encabezado, el carrusel hacía de hero.
+- **Hero partido**: texto a un lado, collage de 2 fotos superpuestas al otro
+  (antes era texto centrado seguido de un carrusel a todo lo ancho).
+- **Franja de estadísticas** calculada desde los datos reales (`PRODUCTS.length`
+  por categoría), no números fijos a mano.
+- El carrusel "Destacados" pasó a ser su propia sección con encabezado — luego se
+  **eliminó por completo** (ver punto 14).
+- **Aromas y Recuerditos ahora son secciones narrativas separadas**, cada una con
+  su propio párrafo de introducción, en vez de un solo grid filtrado por pestañas.
+- Sección nueva **"Cómo pedir"** (3 pasos: elegir → escribir por WhatsApp →
+  coordinar entrega) — antes el sitio nunca explicaba el proceso de compra.
+- **Pie de página oscuro** que cierra la página visualmente, haciendo pareja con
+  el encabezado.
+
+## 14. Selector de idioma ES/EN/DE
+
+Se agregó un selector de idioma completo (español/inglés/alemán), persistido en
+`localStorage`. Traduce absolutamente todo: textos fijos, nombre y descripción de
+cada uno de los 20 jabones, tags de categoría, aria-labels, `<title>` y meta
+description. Arquitectura en `app.js`: diccionario `I18N` por idioma + diccionario
+`PRODUCT_I18N` por producto; función `t(key)` para texto de interfaz.
+
+## 15. Carrusel "Destacados" eliminado — insignia "Más pedido" en su lugar
+
+Monica notó que el carrusel repetía fotos que ya aparecían de nuevo en las
+secciones de Aromas/Recuerditos — redundante, no curado, y sobrecargaba el inicio
+de la página con una segunda diapositiva de fotos justo después del collage del
+hero. Se eliminó el carrusel por completo (markup, CSS y JS) y se reemplazó por
+una insignia dorada "★ Más pedido" directamente sobre la foto de los 6 productos
+más vendidos, dentro de sus tarjetas normales — mismo mensaje, sin repetir fotos.
+
+## 16. Auditoría completa de fotos — 2 pares de productos cambiados
+
+Monica reportó dos veces fotos mal emparejadas con su producto (ninguna de las
+dos había sido tocada por este proyecto; venían así desde la clasificación
+original de las 51 fotos):
+
+- **Boda/Compromiso ↔ Patitos**: Patitos mostraba la foto de manos entrelazadas
+  con anillo y rosas (en realidad Boda/Compromiso); Boda/Compromiso mostraba una
+  foto abstracta que no era ninguna de las dos. La foto real de los patitos de
+  hule estaba sin usar entre las 51 originales.
+- **Limón ↔ Mascotas**: Limón mostraba la foto de jabones con forma de huellita y
+  huesito (en realidad Mascotas); Mascotas mostraba una foto alterna de un
+  unicornio que no correspondía a ningún producto cuidadosamente. La foto real de
+  "Limón" (con su propia etiqueta "Limón") estaba sin usar.
+
+Tras el segundo caso se hizo una auditoría visual de los 20 productos contra sus
+20 fotos asignadas, uno por uno — el resto ya estaba correcto.
+
+## 17. Rebranding a "Jabones Licha" + corrección del logo
+
+El `<h1>`/título del sitio decía "Jabones Artesanales" desde la creación del
+proyecto, como placeholder pendiente de nombre real (ver punto 7, pendiente
+original). Ya con el nombre real confirmado ("Jabones Licha", igual que la Página
+de Facebook/Instagram), se actualizó en `<title>`, meta description, encabezado y
+pie de página, en los tres idiomas. El círculo del logo pasó de "J" a **"JL"**.
+
+De paso se corrigió un bug real: el `.mark` del pie de página nunca tuvo estilo de
+círculo (le faltaban `background`/`border-radius`/`display:flex`) — se mostraba
+como texto plano sin insignia. Ahora comparte el mismo estilo que el del
+encabezado.
+
+## 18. Favicon
+
+El sitio no tenía ningún `<link rel="icon">` — la pestaña del navegador mostraba
+un ícono genérico de globo, y además explicaba el 404 que aparecía en cada prueba
+de este proyecto (el navegador pedía `/favicon.ico` solo, sin que nada lo sirviera).
+Se agregó un favicon de emoji 🧼, mismo criterio que usa `KintroCarpintero` (🪚).
+
+## 19. Fotos del hero mejoradas con procesamiento de imagen
+
+El collage del hero usaba Uva + Unicornio; la foto de Unicornio era oscura y
+granulada (mala iluminación de celular), bajando la calidad visual de lo primero
+que ve cualquier visitante. Se instaló la librería `sharp` (Node) y se generaron
+dos copias nuevas — `images/hero-naranja.jpg` y `images/hero-boda.jpg` — a partir
+de las fotos de Naranja y Boda/Compromiso (las dos de mejor luz/contraste del
+catálogo), aplicando corrección automática de contraste (`normalize()`),
+saturación +15%, brillo +5% y nitidez. Las fotos originales del catálogo no se
+tocaron — solo estas dos copias, usadas únicamente en el collage del hero.
+
+## 20. Corrección de color de botones
+
+El botón "Ver catálogo" (una acción de scroll, no de WhatsApp) usaba el mismo
+verde que "Pedir por WhatsApp" justo al lado, generando confusión sobre cuál
+botón abría WhatsApp. Se intercambiaron las clases: "Ver catálogo" ahora es el
+botón secundario (contorno salvia), y el verde de WhatsApp queda reservado
+exclusivamente para acciones de WhatsApp en todo el sitio.
+
+## Pendientes
+
 - [ ] Confirmar que el botón de WhatsApp (+53 5 3335221) es el número correcto y está activo
 - [ ] Revisar si faltan productos o precios que agregar
+- [ ] Agregar el link del sitio al perfil de Instagram/Facebook si aún no está
 
 ## Cómo editar el catálogo más adelante
 
 Todo se controla desde `app.js`:
-- **Nombre del negocio / número de WhatsApp:** objeto `CONFIG` al inicio del archivo.
-- **Agregar o quitar un jabón:** editar el arreglo `PRODUCTS` (categoría, nombre, descripción, ruta de la imagen).
-- **Cambiar las fotos del carrusel:** editar el arreglo `CAROUSEL_NAMES`.
+- **Nombre del negocio / número de WhatsApp:** objeto `CONFIG` y diccionario `I18N` (clave `businessName`) al inicio del archivo.
+- **Agregar o quitar un jabón:** editar el arreglo `PRODUCTS` (id, categoría, ruta de imagen) y su entrada correspondiente en `PRODUCT_I18N` (nombre/descripción en los 3 idiomas).
+- **Cambiar cuáles son "Más pedido":** editar el `Set` `FAVORITE_IDS`.
+- **Traducciones de la interfaz:** diccionario `I18N` (es/en/de).
 
 Después de editar, hay que subir los cambios a GitHub (`git add`, `git commit`, `git push`) para que se publiquen — o pedírmelo directamente a mí.
