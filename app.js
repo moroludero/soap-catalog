@@ -174,7 +174,7 @@ const PRODUCTS = [
   { id: "naranja", category: "aromas", img: "images/WhatsApp Image 2026-10-13 at 7.23.11 PM (2).jpeg" },
   { id: "lavanda", category: "aromas", img: "images/WhatsApp Image 2026-10-13 at 7.23.12 PM (2).jpeg" },
   { id: "flores", category: "aromas", img: "images/WhatsApp Image 2026-10-13 at 7.23.12 PM (5).jpeg" },
-  { id: "limon", category: "aromas", img: "images/WhatsApp Image 2026-10-13 at 7.23.19 PM (1).jpeg" },
+  { id: "limon", category: "aromas", img: "images/WhatsApp Image 2026-10-13 at 7.23.19 PM (2).jpeg" },
   { id: "arbol-de-te", category: "aromas", img: "images/WhatsApp Image 2026-10-13 at 7.23.21 PM.jpeg" },
   { id: "miel-avena", category: "aromas", img: "images/WhatsApp Image 2026-10-13 at 7.23.20 PM.jpeg" },
   { id: "aloe-vera", category: "aromas", img: "images/WhatsApp Image 2026-10-13 at 7.23.19 PM.jpeg" },
@@ -182,7 +182,7 @@ const PRODUCTS = [
   // ---- Recuerditos para fiestas y eventos ----
   { id: "baby-shower", category: "recuerditos", img: "images/WhatsApp Image 2026-10-13 at 7.23.23 PM (4).jpeg" },
   { id: "navidad", category: "recuerditos", img: "images/WhatsApp Image 2026-10-13 at 7.23.26 PM (1).jpeg" },
-  { id: "mascotas", category: "recuerditos", img: "images/WhatsApp Image 2026-10-13 at 7.23.17 PM (2).jpeg" },
+  { id: "mascotas", category: "recuerditos", img: "images/WhatsApp Image 2026-10-13 at 7.23.19 PM (1).jpeg" },
   { id: "casa-nueva", category: "recuerditos", img: "images/WhatsApp Image 2026-10-13 at 7.23.24 PM (3).jpeg" },
   { id: "boda-compromiso", category: "recuerditos", img: "images/WhatsApp Image 2026-10-13 at 7.23.16 PM (2).jpeg" },
   { id: "patitos", category: "recuerditos", img: "images/WhatsApp Image 2026-10-13 at 7.23.17 PM (1).jpeg" },
