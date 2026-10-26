@@ -9,8 +9,8 @@
   <title id="pageTitle">Catálogo de Jabones Artesanales</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500&family=Jost:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=7">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500&family=Jost:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css?v=8">
 </head>
 <body>
   <div class="grain"></div>
@@ -20,56 +20,142 @@
     <symbol id="icon-leaf" viewBox="0 0 24 24"><path fill="currentColor" d="M20 3C9.5 3 4 9 4 16.5c0 1.6.3 2.8.6 3.5.7-.2 2-.7 3.6-1.8C11.4 15.8 14 12 20 3zm-9.5 15.4C6.9 19.9 5 21 5 21s2.3-7.4 7.4-11.8c-3 4-4.2 7.6-1.9 9.2z"/></symbol>
     <symbol id="icon-gift" viewBox="0 0 24 24"><path fill="currentColor" d="M20 7h-2.17c.11-.31.17-.65.17-1 0-1.66-1.34-3-3-3-1.05 0-1.96.54-2.5 1.35l-.5.67-.5-.68C10.96 3.54 10.05 3 9 3 7.34 3 6 4.34 6 6c0 .35.06.69.17 1H4c-1.1 0-2 .9-2 2v2h20V9c0-1.1-.9-2-2-2zM9 5c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm6 2c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zM3 19c0 1.1.9 2 2 2h6v-9H3v7zm11-7v9h6c1.1 0 2-.9 2-2v-7h-8z"/></symbol>
     <symbol id="icon-sparkle" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2l1.8 6.2L20 10l-6.2 1.8L12 18l-1.8-6.2L4 10l6.2-1.8z"/></symbol>
+    <symbol id="icon-heart" viewBox="0 0 24 24"><path fill="currentColor" d="M12 21s-7.5-4.6-10.1-9.3C.3 8.8 1.4 5.3 4.6 4.2c2-.7 4 0 5.4 1.8C11.4 4.2 13.4 3.5 15.4 4.2c3.2 1.1 4.3 4.6 2.7 7.5C15.5 16.4 12 21 12 21z"/></symbol>
     <symbol id="icon-facebook" viewBox="0 0 24 24"><path fill="currentColor" d="M13.5 9H15V6.5h-1.5C11.6 6.5 10 8.1 10 10.2V12H8v2.5h2V21h2.5v-6.5h2l.5-2.5h-2.5v-1.6c0-.6.4-1 1-1z"/></symbol>
     <symbol id="icon-instagram" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="17.3" cy="6.7" r="1.1" fill="currentColor"/></symbol>
   </svg>
 
-  <div class="lang-switch" id="langSwitch">
-    <button type="button" data-lang="es">ES</button>
-    <button type="button" data-lang="en">EN</button>
-    <button type="button" data-lang="de">DE</button>
-  </div>
-
-  <header class="hero">
-    <p class="eyebrow" data-i18n="eyebrow">Hecho a mano &middot; Glicerina vegetal</p>
-    <h1 id="business-name" data-i18n="businessName">Jabones Artesanales</h1>
-    <p class="hero-sub" data-i18n="heroSub">Jabones naturales con formas y aromas para regalar, celebrar y disfrutar</p>
-    <div class="trust-badges">
-      <span><svg class="icon"><use href="#icon-leaf"/></svg> <span data-i18n="badge1">100% vegetal</span></span>
-      <span><svg class="icon"><use href="#icon-gift"/></svg> <span data-i18n="badge2">Para regalar</span></span>
-      <span><svg class="icon"><use href="#icon-sparkle"/></svg> <span data-i18n="badge3">Hecho a mano</span></span>
-    </div>
-    <div class="hero-divider" aria-hidden="true">
-      <svg viewBox="0 0 120 20" width="120" height="20"><path d="M0 10 Q 30 0, 60 10 T 120 10" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
-    </div>
+  <header>
+    <nav class="nav">
+      <a href="#inicio" class="brand"><span class="mark">J</span> <span data-i18n="businessName">Jabones Artesanales</span></a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#aromas" data-i18n="navAromas">Aromas</a></li>
+        <li><a href="#recuerditos" data-i18n="navRecuerditos">Recuerditos</a></li>
+        <li><a href="#como-pedir" data-i18n="navComoPedir">Cómo pedir</a></li>
+      </ul>
+      <div class="lang-switch" id="langSwitch">
+        <button type="button" data-lang="es">ES</button>
+        <button type="button" data-lang="en">EN</button>
+        <button type="button" data-lang="de">DE</button>
+      </div>
+      <a class="nav-cta" id="navWa" href="#" target="_blank" rel="noopener"><svg class="icon"><use href="#icon-whatsapp"/></svg> <span class="nav-cta-label">WhatsApp</span></a>
+      <button class="menu-toggle" id="menuToggle" aria-label="Abrir menú">
+        <span></span><span></span><span></span>
+      </button>
+    </nav>
   </header>
 
-  <section class="carousel" id="carousel" aria-roledescription="carrusel" aria-label="Jabones destacados">
-    <div class="carousel-viewport">
-      <div class="carousel-track" id="carousel-track"></div>
+  <section class="hero" id="inicio">
+    <div class="container hero-inner">
+      <div class="hero-text">
+        <p class="eyebrow" data-i18n="eyebrow">Hecho a mano &middot; Glicerina vegetal</p>
+        <h1 data-i18n="heroTitle">Jabones que se regalan, se celebran y se disfrutan</h1>
+        <p class="hero-sub" data-i18n="heroText">Cada jabón se hace a mano con glicerina vegetal: formas y aromas para el día a día, y diseños especiales para bodas, baby showers y fiestas.</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#aromas" data-i18n="heroCtaPrimary">Ver catálogo</a>
+          <a class="btn btn-secondary" id="heroWa" href="#" target="_blank" rel="noopener"><svg class="icon"><use href="#icon-whatsapp"/></svg> <span data-i18n="heroCtaSecondary">Pedir por WhatsApp</span></a>
+        </div>
+        <div class="trust-badges">
+          <span><svg class="icon"><use href="#icon-leaf"/></svg> <span data-i18n="badge1">100% vegetal</span></span>
+          <span><svg class="icon"><use href="#icon-gift"/></svg> <span data-i18n="badge2">Para regalar</span></span>
+          <span><svg class="icon"><use href="#icon-sparkle"/></svg> <span data-i18n="badge3">Hecho a mano</span></span>
+        </div>
+      </div>
+      <div class="hero-collage">
+        <div class="collage-img collage-back">
+          <img src="images/WhatsApp Image 2026-10-13 at 7.23.26 PM (2).jpeg" alt="Jabón Unicornio">
+        </div>
+        <div class="collage-img collage-front">
+          <img src="images/WhatsApp Image 2026-10-13 at 7.23.17 PM.jpeg" alt="Jabón Uva">
+        </div>
+      </div>
     </div>
-    <button class="carousel-arrow prev" id="carousel-prev" aria-label="Anterior">&#10094;</button>
-    <button class="carousel-arrow next" id="carousel-next" aria-label="Siguiente">&#10095;</button>
-    <div class="carousel-dots" id="carousel-dots"></div>
   </section>
 
-  <nav class="tabs" id="tabs">
-    <button class="tab active" data-filter="todos">Todos</button>
-    <button class="tab" data-filter="aromas">Aromas</button>
-    <button class="tab" data-filter="recuerditos">Recuerditos para Eventos</button>
-  </nav>
+  <section class="stats-strip reveal">
+    <div class="container stats-grid">
+      <div class="stat"><strong id="statAromasNum">11</strong><span data-i18n="statAromas">Aromas disponibles</span></div>
+      <div class="stat"><strong id="statRecuerdosNum">9</strong><span data-i18n="statRecuerdos">Diseños para eventos</span></div>
+      <div class="stat"><strong>100%</strong><span data-i18n="statHandmade">Hecho a mano</span></div>
+    </div>
+  </section>
 
-  <main class="grid" id="grid"></main>
+  <section class="section" id="destacados">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="eyebrow" data-i18n="destacadosEyebrow">Los favoritos</p>
+        <h2 data-i18n="destacadosTitle">Lo más pedido</h2>
+        <p data-i18n="destacadosText">Una muestra rápida de lo que más se repite en pedidos para regalos y eventos.</p>
+      </div>
+    </div>
+    <section class="carousel" id="carousel" aria-roledescription="carrusel" aria-label="Jabones destacados">
+      <div class="carousel-viewport">
+        <div class="carousel-track" id="carousel-track"></div>
+      </div>
+      <button class="carousel-arrow prev" id="carousel-prev" aria-label="Anterior">&#10094;</button>
+      <button class="carousel-arrow next" id="carousel-next" aria-label="Siguiente">&#10095;</button>
+      <div class="carousel-dots" id="carousel-dots"></div>
+    </section>
+  </section>
+
+  <section class="section section-alt" id="aromas">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="eyebrow" data-i18n="aromasEyebrow">Para el día a día</p>
+        <h2 data-i18n="aromasTitle">Aromas</h2>
+        <p data-i18n="aromasText">Jabones individuales de glicerina vegetal, cada uno con su propio aroma. Ideales para uso diario o como detalle sencillo.</p>
+      </div>
+      <div class="grid" id="grid-aromas"></div>
+    </div>
+  </section>
+
+  <section class="section" id="recuerditos">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="eyebrow" data-i18n="recuerdosEyebrow">Para tu evento</p>
+        <h2 data-i18n="recuerdosTitle">Recuerditos para Eventos</h2>
+        <p data-i18n="recuerdosText">Diseños especiales para baby showers, bodas, cumpleaños y fiestas — empacados y listos para entregar a tus invitados.</p>
+      </div>
+      <div class="grid" id="grid-recuerditos"></div>
+    </div>
+  </section>
+
+  <section class="section section-alt" id="como-pedir">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="eyebrow" data-i18n="comoPedirEyebrow">Así de fácil</p>
+        <h2 data-i18n="comoPedirTitle">Cómo pedir</h2>
+      </div>
+      <div class="steps reveal">
+        <div class="step">
+          <div class="step-icon"><svg class="icon"><use href="#icon-heart"/></svg></div>
+          <h3 data-i18n="step1Title">Elige tu jabón</h3>
+          <p data-i18n="step1Text">Recorre el catálogo y elige el aroma o diseño que más te guste.</p>
+        </div>
+        <div class="step">
+          <div class="step-icon"><svg class="icon"><use href="#icon-whatsapp"/></svg></div>
+          <h3 data-i18n="step2Title">Escríbenos por WhatsApp</h3>
+          <p data-i18n="step2Text">Toca el botón de pedido — el mensaje ya lleva el nombre del jabón.</p>
+        </div>
+        <div class="step">
+          <div class="step-icon"><svg class="icon"><use href="#icon-gift"/></svg></div>
+          <h3 data-i18n="step3Title">Coordinamos la entrega</h3>
+          <p data-i18n="step3Text">Confirmamos cantidad, empaque y cómo te lo hacemos llegar.</p>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <footer>
-    <div class="hero-divider" aria-hidden="true">
-      <svg viewBox="0 0 120 20" width="120" height="20"><path d="M0 10 Q 30 0, 60 10 T 120 10" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
-    </div>
-    <p data-i18n="footerText">¿Te interesa algún jabón? Escríbenos directo por WhatsApp.</p>
-    <a id="footer-wa" class="footer-cta" href="#" target="_blank" rel="noopener"><svg class="icon"><use href="#icon-whatsapp"/></svg> <span data-i18n="footerCta">Contactar por WhatsApp</span></a>
-    <div class="social-row">
-      <a href="https://www.facebook.com/profile.php?id=61595298488203" target="_blank" rel="noopener" aria-label="Facebook de Jabones Licha"><svg class="icon"><use href="#icon-facebook"/></svg></a>
-      <a href="https://www.instagram.com/jaboneslicha/" target="_blank" rel="noopener" aria-label="Instagram de Jabones Licha"><svg class="icon"><use href="#icon-instagram"/></svg></a>
+    <div class="container footer-inner">
+      <div class="footer-brand"><span class="mark">J</span> <span data-i18n="businessName">Jabones Artesanales</span></div>
+      <p class="footer-tagline" data-i18n="footerTagline">Jabones artesanales hechos con cariño, uno a la vez.</p>
+      <a id="footer-wa" class="btn btn-primary" href="#" target="_blank" rel="noopener"><svg class="icon"><use href="#icon-whatsapp"/></svg> <span data-i18n="footerCta">Contactar por WhatsApp</span></a>
+      <div class="social-row">
+        <a href="https://www.facebook.com/profile.php?id=61595298488203" target="_blank" rel="noopener" aria-label="Facebook de Jabones Licha"><svg class="icon"><use href="#icon-facebook"/></svg></a>
+        <a href="https://www.instagram.com/jaboneslicha/" target="_blank" rel="noopener" aria-label="Instagram de Jabones Licha"><svg class="icon"><use href="#icon-instagram"/></svg></a>
+      </div>
+      <p class="footer-copy" data-i18n="footerCopy">Hecho a mano</p>
     </div>
   </footer>
 
@@ -93,6 +179,6 @@
     <svg class="icon" viewBox="0 0 24 24" width="28" height="28"><use href="#icon-whatsapp"/></svg>
   </a>
 
-  <script src="app.js?v=7"></script>
+  <script src="app.js?v=8"></script>
 </body>
 </html>

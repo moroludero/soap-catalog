@@ -10,82 +10,163 @@ let currentLang = LANGS.includes(savedLang) ? savedLang : "es";
 
 const I18N = {
   es: {
+    navAromas: "Aromas",
+    navRecuerditos: "Recuerditos",
+    navComoPedir: "Cómo pedir",
     eyebrow: "Hecho a mano · Glicerina vegetal",
     businessName: "Jabones Artesanales",
-    heroSub: "Jabones naturales con formas y aromas para regalar, celebrar y disfrutar",
+    heroTitle: "Jabones que se regalan, se celebran y se disfrutan",
+    heroText: "Cada jabón se hace a mano con glicerina vegetal: formas y aromas para el día a día, y diseños especiales para bodas, baby showers y fiestas.",
+    heroCtaPrimary: "Ver catálogo",
+    heroCtaSecondary: "Pedir por WhatsApp",
     badge1: "100% vegetal",
     badge2: "Para regalar",
     badge3: "Hecho a mano",
-    tabAll: "Todos",
-    tabAromas: "Aromas",
-    tabRecuerdos: "Recuerditos para Eventos",
+    statAromas: "Aromas disponibles",
+    statRecuerdos: "Diseños para eventos",
+    statHandmade: "Hecho a mano",
+    destacadosEyebrow: "Los favoritos",
+    destacadosTitle: "Lo más pedido",
+    destacadosText: "Una muestra rápida de lo que más se repite en pedidos para regalos y eventos.",
+    aromasEyebrow: "Para el día a día",
+    aromasTitle: "Aromas",
+    aromasText: "Jabones individuales de glicerina vegetal, cada uno con su propio aroma. Ideales para uso diario o como detalle sencillo.",
+    recuerdosEyebrow: "Para tu evento",
+    recuerdosTitle: "Recuerditos para Eventos",
+    recuerdosText: "Diseños especiales para baby showers, bodas, cumpleaños y fiestas — empacados y listos para entregar a tus invitados.",
     tagAroma: "Aroma",
     tagRecuerdo: "Recuerdo",
     orderBtn: "Pedir por WhatsApp",
-    footerText: "¿Te interesa algún jabón? Escríbenos directo por WhatsApp.",
+    comoPedirEyebrow: "Así de fácil",
+    comoPedirTitle: "Cómo pedir",
+    step1Title: "Elige tu jabón",
+    step1Text: "Recorre el catálogo y elige el aroma o diseño que más te guste.",
+    step2Title: "Escríbenos por WhatsApp",
+    step2Text: "Toca el botón de pedido — el mensaje ya lleva el nombre del jabón.",
+    step3Title: "Coordinamos la entrega",
+    step3Text: "Confirmamos cantidad, empaque y cómo te lo hacemos llegar.",
+    footerTagline: "Jabones artesanales hechos con cariño, uno a la vez.",
     footerCta: "Contactar por WhatsApp",
+    footerCopy: "Hecho a mano",
     ariaFeatured: "Jabones destacados",
     ariaCarousel: "carrusel",
     ariaPrev: "Anterior",
     ariaNext: "Siguiente",
     ariaClose: "Cerrar",
+    ariaMenu: "Abrir menú",
     ariaDot: (i) => `Ir a la imagen ${i}`,
     ariaView: (name) => `Ver ${name} en grande`,
     ariaFloat: "Pedir por WhatsApp",
+    ariaFacebook: "Facebook de Jabones Licha",
+    ariaInstagram: "Instagram de Jabones Licha",
     pageTitle: "Catálogo de Jabones Artesanales",
     metaDesc: "Catálogo de jabones artesanales de glicerina vegetal: aromas y recuerditos para eventos. Pide por WhatsApp.",
     waMessage: (name) => `Hola, me interesa el jabón: ${name}`,
   },
   en: {
+    navAromas: "Scents",
+    navRecuerditos: "Event Favors",
+    navComoPedir: "How to order",
     eyebrow: "Handmade · Vegetable glycerin",
     businessName: "Handmade Soaps",
-    heroSub: "Natural soaps in fun shapes and scents, perfect for gifting and celebrating",
+    heroTitle: "Soaps made to be gifted, celebrated, and enjoyed",
+    heroText: "Every soap is handmade with vegetable glycerin: everyday shapes and scents, plus special designs for weddings, baby showers, and parties.",
+    heroCtaPrimary: "View catalog",
+    heroCtaSecondary: "Order on WhatsApp",
     badge1: "100% vegetable-based",
     badge2: "Great for gifts",
     badge3: "Handmade",
-    tabAll: "All",
-    tabAromas: "Scents",
-    tabRecuerdos: "Event Favors",
+    statAromas: "Scents available",
+    statRecuerdos: "Event designs",
+    statHandmade: "Handmade",
+    destacadosEyebrow: "The favorites",
+    destacadosTitle: "Most requested",
+    destacadosText: "A quick look at what shows up most in gift and event orders.",
+    aromasEyebrow: "For every day",
+    aromasTitle: "Scents",
+    aromasText: "Individual vegetable-glycerin soaps, each with its own scent. Great for everyday use or as a simple gift.",
+    recuerdosEyebrow: "For your event",
+    recuerdosTitle: "Event Favors",
+    recuerdosText: "Special designs for baby showers, weddings, birthdays, and parties — packaged and ready to hand to your guests.",
     tagAroma: "Scent",
     tagRecuerdo: "Favor",
     orderBtn: "Order on WhatsApp",
-    footerText: "Interested in a soap? Message us directly on WhatsApp.",
+    comoPedirEyebrow: "It's easy",
+    comoPedirTitle: "How to order",
+    step1Title: "Pick your soap",
+    step1Text: "Browse the catalog and choose the scent or design you like.",
+    step2Title: "Message us on WhatsApp",
+    step2Text: "Tap the order button — the message already includes the soap's name.",
+    step3Title: "We arrange delivery",
+    step3Text: "We confirm quantity, packaging, and how to get it to you.",
+    footerTagline: "Handmade soaps, made with care, one at a time.",
     footerCta: "Contact on WhatsApp",
+    footerCopy: "Handmade",
     ariaFeatured: "Featured soaps",
     ariaCarousel: "carousel",
     ariaPrev: "Previous",
     ariaNext: "Next",
     ariaClose: "Close",
+    ariaMenu: "Open menu",
     ariaDot: (i) => `Go to image ${i}`,
     ariaView: (name) => `View ${name} larger`,
     ariaFloat: "Order on WhatsApp",
+    ariaFacebook: "Jabones Licha on Facebook",
+    ariaInstagram: "Jabones Licha on Instagram",
     pageTitle: "Handmade Soap Catalog",
     metaDesc: "Handmade vegetable-glycerin soap catalog: scented bars and event favors. Order on WhatsApp.",
     waMessage: (name) => `Hi! I'm interested in the soap: ${name}`,
   },
   de: {
+    navAromas: "Düfte",
+    navRecuerditos: "Gastgeschenke",
+    navComoPedir: "So bestellst du",
     eyebrow: "Handgefertigt · Pflanzliches Glycerin",
     businessName: "Handgefertigte Seifen",
-    heroSub: "Natürliche Seifen in besonderen Formen und Düften – perfekt zum Verschenken und Feiern",
+    heroTitle: "Seifen zum Verschenken, Feiern und Genießen",
+    heroText: "Jede Seife ist handgefertigt aus pflanzlichem Glycerin: Alltagsformen und -düfte sowie besondere Designs für Hochzeiten, Babypartys und Feste.",
+    heroCtaPrimary: "Katalog ansehen",
+    heroCtaSecondary: "Per WhatsApp bestellen",
     badge1: "100 % pflanzlich",
     badge2: "Ideal als Geschenk",
     badge3: "Handgefertigt",
-    tabAll: "Alle",
-    tabAromas: "Düfte",
-    tabRecuerdos: "Gastgeschenke",
+    statAromas: "Verfügbare Düfte",
+    statRecuerdos: "Designs für Feste",
+    statHandmade: "Handgefertigt",
+    destacadosEyebrow: "Die Favoriten",
+    destacadosTitle: "Am meisten bestellt",
+    destacadosText: "Ein schneller Blick auf das, was bei Geschenken und Festen am häufigsten bestellt wird.",
+    aromasEyebrow: "Für den Alltag",
+    aromasTitle: "Düfte",
+    aromasText: "Einzelne Seifen aus pflanzlichem Glycerin, jede mit eigenem Duft. Ideal für den Alltag oder als kleines Geschenk.",
+    recuerdosEyebrow: "Für dein Fest",
+    recuerdosTitle: "Gastgeschenke",
+    recuerdosText: "Besondere Designs für Babypartys, Hochzeiten, Geburtstage und Feste — verpackt und bereit für deine Gäste.",
     tagAroma: "Duft",
     tagRecuerdo: "Geschenk",
     orderBtn: "Per WhatsApp bestellen",
-    footerText: "Interesse an einer Seife? Schreib uns direkt per WhatsApp.",
+    comoPedirEyebrow: "Ganz einfach",
+    comoPedirTitle: "So bestellst du",
+    step1Title: "Seife auswählen",
+    step1Text: "Stöbere im Katalog und wähle deinen Lieblingsduft oder dein Lieblingsdesign.",
+    step2Title: "Per WhatsApp schreiben",
+    step2Text: "Tippe auf den Bestell-Button — die Nachricht enthält bereits den Namen der Seife.",
+    step3Title: "Lieferung vereinbaren",
+    step3Text: "Wir bestätigen Menge, Verpackung und Zustellung.",
+    footerTagline: "Handgefertigte Seifen, mit Liebe gemacht, eine nach der anderen.",
     footerCta: "Per WhatsApp kontaktieren",
+    footerCopy: "Handgefertigt",
     ariaFeatured: "Ausgewählte Seifen",
     ariaCarousel: "Karussell",
     ariaPrev: "Zurück",
     ariaNext: "Weiter",
     ariaClose: "Schließen",
+    ariaMenu: "Menü öffnen",
     ariaDot: (i) => `Zu Bild ${i} wechseln`,
     ariaView: (name) => `${name} vergrößert ansehen`,
     ariaFloat: "Per WhatsApp bestellen",
+    ariaFacebook: "Jabones Licha auf Facebook",
+    ariaInstagram: "Jabones Licha auf Instagram",
     pageTitle: "Katalog für handgefertigte Seifen",
     metaDesc: "Katalog handgefertigter Glycerinseifen: Duftseifen und Gastgeschenke. Bestellung per WhatsApp.",
     waMessage: (name) => `Hallo! Ich interessiere mich für die Seife: ${name}`,
@@ -115,7 +196,6 @@ const PRODUCTS = [
   { id: "navidad", category: "recuerditos", img: "images/WhatsApp Image 2026-10-13 at 7.23.26 PM (1).jpeg" },
   { id: "mascotas", category: "recuerditos", img: "images/WhatsApp Image 2026-10-13 at 7.23.17 PM (2).jpeg" },
   { id: "casa-nueva", category: "recuerditos", img: "images/WhatsApp Image 2026-10-13 at 7.23.24 PM (3).jpeg" },
-  // fixed 2026-10-26: this id/image pair and "patitos" below had swapped photos (hands+rose soap was showing as "Patitos")
   { id: "boda-compromiso", category: "recuerditos", img: "images/WhatsApp Image 2026-10-13 at 7.23.16 PM (2).jpeg" },
   { id: "patitos", category: "recuerditos", img: "images/WhatsApp Image 2026-10-13 at 7.23.17 PM (1).jpeg" },
   { id: "unicornio", category: "recuerditos", img: "images/WhatsApp Image 2026-10-13 at 7.23.26 PM (2).jpeg" },
@@ -231,7 +311,10 @@ function localized(product) {
   return { ...product, name: tr.name, desc: tr.desc };
 }
 
-// Curated highlight reel for the hero carousel
+const AROMAS = PRODUCTS.filter((p) => p.category === "aromas");
+const RECUERDITOS = PRODUCTS.filter((p) => p.category === "recuerditos");
+
+// Curated highlight reel for the "Destacados" carousel
 const CAROUSEL_IDS = ["uva", "lavanda", "navidad", "unicornio", "baby-shower", "cheesecake"];
 
 function waLink(productName) {
@@ -239,78 +322,86 @@ function waLink(productName) {
   return `https://wa.me/${CONFIG.whatsappNumber}?text=${msg}`;
 }
 
-let currentFilter = "todos";
-let currentList = [];
-let currentIndex = 0;
-let lastFocusedEl = null;
+// ---------------- Product grids (no filter — each section is fixed) ----------------
+let aromasList = [];
+let recuerditosList = [];
 
-function renderProducts(filter) {
-  currentFilter = filter;
-  const grid = document.getElementById("grid");
-  grid.innerHTML = "";
-  const items = PRODUCTS.filter(p => filter === "todos" || p.category === filter).map(localized);
-  items.forEach((p, i) => {
-    const card = document.createElement("article");
-    card.className = "card reveal";
-    card.innerHTML = `
-      <div class="card-img" data-index="${i}" role="button" tabindex="0" aria-label="${t("ariaView")(p.name)}">
+function cardHTML(p, idx, gridName) {
+  const tagClass = p.category === "aromas" ? "tag-aroma" : "tag-recuerdo";
+  const tagText = p.category === "aromas" ? t("tagAroma") : t("tagRecuerdo");
+  return `
+    <article class="card reveal">
+      <div class="card-img" data-grid="${gridName}" data-index="${idx}" role="button" tabindex="0" aria-label="${t("ariaView")(p.name)}">
         <img src="${p.img}" alt="${p.name}" loading="lazy">
       </div>
       <div class="card-body">
-        <span class="tag ${p.category === "aromas" ? "tag-aroma" : "tag-recuerdo"}">${p.category === "aromas" ? t("tagAroma") : t("tagRecuerdo")}</span>
+        <span class="tag ${tagClass}">${tagText}</span>
         <h3>${p.name}</h3>
         <p>${p.desc}</p>
         <a class="order-btn" href="${waLink(p.name)}" target="_blank" rel="noopener"><svg class="icon"><use href="#icon-whatsapp"/></svg> ${t("orderBtn")}</a>
       </div>
-    `;
-    const imgWrap = card.querySelector(".card-img");
-    imgWrap.addEventListener("click", () => openLightbox(items, i));
-    imgWrap.addEventListener("keydown", (e) => {
-      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openLightbox(items, i); }
-    });
-    grid.appendChild(card);
-  });
-  currentList = items;
+    </article>`;
+}
+
+function renderGrids() {
+  aromasList = AROMAS.map(localized);
+  recuerditosList = RECUERDITOS.map(localized);
+
+  document.getElementById("grid-aromas").innerHTML = aromasList
+    .map((p, i) => cardHTML(p, i, "aromas"))
+    .join("");
+
+  document.getElementById("grid-recuerditos").innerHTML = recuerditosList
+    .map((p, i) => cardHTML(p, i, "recuerditos"))
+    .join("");
+
   observeReveals();
 }
 
 let revealObserver;
 function observeReveals() {
   if (!("IntersectionObserver" in window)) {
-    document.querySelectorAll(".reveal").forEach(el => el.classList.add("in-view"));
+    document.querySelectorAll(".reveal").forEach((el) => el.classList.add("in-view"));
     return;
   }
   if (!revealObserver) {
-    revealObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("in-view");
-          revealObserver.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.12 });
+    revealObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("in-view");
+            revealObserver.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.12 }
+    );
   }
-  document.querySelectorAll(".reveal:not(.in-view)").forEach(el => revealObserver.observe(el));
+  document.querySelectorAll(".reveal:not(.in-view)").forEach((el) => revealObserver.observe(el));
 }
 
-function initTabs() {
-  const tabs = document.querySelectorAll(".tab");
-  tabs.forEach(tab => {
-    tab.addEventListener("click", () => {
-      tabs.forEach(tb => tb.classList.remove("active"));
-      tab.classList.add("active");
-      renderProducts(tab.dataset.filter);
-    });
-  });
+document.addEventListener("click", (e) => {
+  const imgWrap = e.target.closest(".card-img");
+  if (!imgWrap) return;
+  const list = imgWrap.dataset.grid === "aromas" ? aromasList : recuerditosList;
+  openLightbox(list, Number(imgWrap.dataset.index));
+});
+document.addEventListener("keydown", (e) => {
+  if (e.key !== "Enter" && e.key !== " ") return;
+  const imgWrap = e.target.closest(".card-img");
+  if (!imgWrap) return;
+  e.preventDefault();
+  const list = imgWrap.dataset.grid === "aromas" ? aromasList : recuerditosList;
+  openLightbox(list, Number(imgWrap.dataset.index));
+});
+
+// ---------------- Stats (computed from data, not hardcoded) ----------------
+function renderStats() {
+  document.getElementById("statAromasNum").textContent = AROMAS.length;
+  document.getElementById("statRecuerdosNum").textContent = RECUERDITOS.length;
 }
 
-function updateTabLabels() {
-  document.querySelector('.tab[data-filter="todos"]').textContent = t("tabAll");
-  document.querySelector('.tab[data-filter="aromas"]').textContent = t("tabAromas");
-  document.querySelector('.tab[data-filter="recuerditos"]').textContent = t("tabRecuerdos");
-}
-
-// ---------------- Hero carousel ----------------
+// ---------------- Hero carousel ("Destacados") ----------------
 let carouselIndex = 0;
 let carouselTimer = null;
 const CAROUSEL_INTERVAL = 4500;
@@ -320,21 +411,23 @@ let carouselSlideProducts = [];
 function initCarousel() {
   const track = document.getElementById("carousel-track");
   const dotsWrap = document.getElementById("carousel-dots");
-  carouselSlideProducts = CAROUSEL_IDS
-    .map(id => PRODUCTS.find(p => p.id === id))
-    .filter(Boolean);
+  carouselSlideProducts = CAROUSEL_IDS.map((id) => PRODUCTS.find((p) => p.id === id)).filter(Boolean);
 
-  track.innerHTML = carouselSlideProducts.map(p => `
+  track.innerHTML = carouselSlideProducts
+    .map(
+      (p) => `
     <div class="carousel-slide">
       <img src="${p.img}" alt="">
       <div class="carousel-caption"><span></span></div>
     </div>
-  `).join("");
+  `
+    )
+    .join("");
   carouselSlideEls = Array.from(track.querySelectorAll(".carousel-slide"));
 
-  dotsWrap.innerHTML = carouselSlideProducts.map((_, i) =>
-    `<button class="carousel-dot${i === 0 ? " active" : ""}" data-i="${i}"></button>`
-  ).join("");
+  dotsWrap.innerHTML = carouselSlideProducts
+    .map((_, i) => `<button class="carousel-dot${i === 0 ? " active" : ""}" data-i="${i}"></button>`)
+    .join("");
 
   const dots = dotsWrap.querySelectorAll(".carousel-dot");
   const total = carouselSlideProducts.length;
@@ -342,14 +435,18 @@ function initCarousel() {
   function goTo(i) {
     carouselIndex = (i + total) % total;
     track.style.transform = `translateX(-${carouselIndex * 100}%)`;
-    dots.forEach(d => d.classList.remove("active"));
+    dots.forEach((d) => d.classList.remove("active"));
     dots[carouselIndex].classList.add("active");
-    carouselSlideEls.forEach(s => s.classList.remove("active"));
+    carouselSlideEls.forEach((s) => s.classList.remove("active"));
     carouselSlideEls[carouselIndex].classList.add("active");
   }
 
-  function next() { goTo(carouselIndex + 1); }
-  function prev() { goTo(carouselIndex - 1); }
+  function next() {
+    goTo(carouselIndex + 1);
+  }
+  function prev() {
+    goTo(carouselIndex - 1);
+  }
 
   function startAutoplay() {
     stopAutoplay();
@@ -361,9 +458,20 @@ function initCarousel() {
     carouselTimer = null;
   }
 
-  dots.forEach(d => d.addEventListener("click", () => { goTo(Number(d.dataset.i)); startAutoplay(); }));
-  document.getElementById("carousel-prev").addEventListener("click", () => { prev(); startAutoplay(); });
-  document.getElementById("carousel-next").addEventListener("click", () => { next(); startAutoplay(); });
+  dots.forEach((d) =>
+    d.addEventListener("click", () => {
+      goTo(Number(d.dataset.i));
+      startAutoplay();
+    })
+  );
+  document.getElementById("carousel-prev").addEventListener("click", () => {
+    prev();
+    startAutoplay();
+  });
+  document.getElementById("carousel-next").addEventListener("click", () => {
+    next();
+    startAutoplay();
+  });
 
   const wrap = document.getElementById("carousel");
   wrap.addEventListener("mouseenter", stopAutoplay);
@@ -372,14 +480,25 @@ function initCarousel() {
   wrap.addEventListener("focusout", startAutoplay);
 
   let touchStartX = null;
-  track.addEventListener("touchstart", (e) => { touchStartX = e.touches[0].clientX; stopAutoplay(); }, { passive: true });
-  track.addEventListener("touchend", (e) => {
-    if (touchStartX === null) return;
-    const dx = e.changedTouches[0].clientX - touchStartX;
-    if (Math.abs(dx) > 40) (dx < 0 ? next() : prev());
-    touchStartX = null;
-    startAutoplay();
-  }, { passive: true });
+  track.addEventListener(
+    "touchstart",
+    (e) => {
+      touchStartX = e.touches[0].clientX;
+      stopAutoplay();
+    },
+    { passive: true }
+  );
+  track.addEventListener(
+    "touchend",
+    (e) => {
+      if (touchStartX === null) return;
+      const dx = e.changedTouches[0].clientX - touchStartX;
+      if (Math.abs(dx) > 40) (dx < 0 ? next() : prev());
+      touchStartX = null;
+      startAutoplay();
+    },
+    { passive: true }
+  );
 
   updateCarouselTexts();
   goTo(0);
@@ -404,6 +523,10 @@ function updateCarouselTexts() {
 }
 
 // ---------------- Lightbox ----------------
+let currentList = [];
+let currentIndex = 0;
+let lastFocusedEl = null;
+
 function openLightbox(list, index) {
   currentList = list;
   currentIndex = index;
@@ -463,6 +586,27 @@ function updateLightboxAria() {
   document.getElementById("lightbox-next").setAttribute("aria-label", t("ariaNext"));
 }
 
+// ---------------- Mobile nav ----------------
+function initMobileNav() {
+  const menuToggle = document.getElementById("menuToggle");
+  const navLinks = document.getElementById("navLinks");
+  menuToggle.addEventListener("click", () => {
+    navLinks.classList.toggle("open");
+    menuToggle.classList.toggle("open");
+  });
+  navLinks.addEventListener("click", (e) => {
+    if (e.target.tagName === "A") {
+      navLinks.classList.remove("open");
+      menuToggle.classList.remove("open");
+    }
+  });
+}
+
+function initHeaderScroll() {
+  const header = document.querySelector("header");
+  window.addEventListener("scroll", () => header.classList.toggle("scrolled", window.scrollY > 8), { passive: true });
+}
+
 // ---------------- Language switching ----------------
 function applyStaticText() {
   document.querySelectorAll("[data-i18n]").forEach((el) => {
@@ -476,16 +620,24 @@ function setLanguage(lang) {
   localStorage.setItem("lang", lang);
   document.documentElement.lang = lang;
   document.title = t("pageTitle");
-  document.getElementById("metaDesc").setAttribute("content", t("metaDesc"));
+  const metaDesc = document.querySelector('meta[name="description"]');
+  if (metaDesc) metaDesc.setAttribute("content", t("metaDesc"));
+
   applyStaticText();
-  updateTabLabels();
+  renderGrids();
+  updateCarouselTexts();
+  updateLightboxAria();
+
+  document.getElementById("menuToggle").setAttribute("aria-label", t("ariaMenu"));
   document.getElementById("float-wa").setAttribute("aria-label", t("ariaFloat"));
+  const fbLink = document.querySelector('.social-row a[href*="facebook.com"]');
+  const igLink = document.querySelector('.social-row a[href*="instagram.com"]');
+  if (fbLink) fbLink.setAttribute("aria-label", t("ariaFacebook"));
+  if (igLink) igLink.setAttribute("aria-label", t("ariaInstagram"));
+
   document.querySelectorAll("#langSwitch button").forEach((b) => {
     b.classList.toggle("active", b.dataset.lang === lang);
   });
-  renderProducts(currentFilter);
-  updateCarouselTexts();
-  updateLightboxAria();
 }
 
 function initLangSwitch() {
@@ -497,8 +649,12 @@ function initLangSwitch() {
 document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("footer-wa").href = `https://wa.me/${CONFIG.whatsappNumber}`;
   document.getElementById("float-wa").href = `https://wa.me/${CONFIG.whatsappNumber}`;
-  initTabs();
+  document.getElementById("heroWa").href = `https://wa.me/${CONFIG.whatsappNumber}`;
+  document.getElementById("navWa").href = `https://wa.me/${CONFIG.whatsappNumber}`;
+  renderStats();
   initLangSwitch();
+  initMobileNav();
+  initHeaderScroll();
   initCarousel();
   initLightbox();
   setLanguage(currentLang);
