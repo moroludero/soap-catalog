@@ -35,7 +35,7 @@
 
 html { scroll-behavior: smooth; }
 
-#inicio, #aromas, #recuerditos, #destacados, #como-pedir {
+#inicio, #aromas, #recuerditos, #como-pedir {
   scroll-margin-top: 76px;
 }
 
@@ -325,57 +325,6 @@ header.scrolled { box-shadow: var(--shadow-sm); }
 .section-head h2 { font-size: clamp(1.5rem, 3vw, 2rem); }
 .section-head p { color: var(--muted); margin: 0; }
 
-/* ---------------- Carousel ("Destacados") ---------------- */
-.carousel { position: relative; max-width: 900px; margin: 0 auto; padding: 0 1.25rem; }
-
-.carousel-viewport { overflow: hidden; border-radius: 20px; box-shadow: var(--shadow-lg); }
-
-.carousel-track { display: flex; transition: transform 0.6s cubic-bezier(.4,0,.2,1); }
-.carousel-slide { position: relative; flex: 0 0 100%; aspect-ratio: 16 / 9; }
-
-.carousel-slide img {
-  width: 100%; height: 100%; object-fit: cover; display: block;
-  transform: scale(1.04); transition: transform 7s ease-out;
-}
-
-.carousel-slide.active img { transform: scale(1.14); }
-
-@media (prefers-reduced-motion: reduce) {
-  .carousel-slide img, .carousel-slide.active img { transform: none; transition: none; }
-}
-
-.carousel-caption {
-  position: absolute; left: 0; right: 0; bottom: 0;
-  padding: 2.5rem 1.25rem 1rem;
-  background: linear-gradient(to top, rgba(30, 36, 27, 0.72), transparent);
-}
-
-.carousel-caption span { color: #fff; font-family: "Fraunces", serif; font-size: 1.3rem; font-weight: 600; }
-
-.carousel-arrow {
-  position: absolute; top: 50%; transform: translateY(-50%);
-  background: rgba(255, 253, 250, 0.85);
-  color: var(--ink);
-  border: none;
-  width: 40px; height: 40px;
-  border-radius: 50%;
-  cursor: pointer;
-  font-size: 0.95rem;
-  display: flex; align-items: center; justify-content: center;
-  box-shadow: 0 4px 12px rgba(46, 51, 41, 0.18);
-  transition: background 0.2s ease, transform 0.15s ease;
-}
-
-.carousel-arrow:hover { background: #fff; transform: translateY(-50%) scale(1.06); }
-.carousel-arrow.prev { left: 1.75rem; }
-.carousel-arrow.next { right: 1.75rem; }
-
-.carousel-dots { display: flex; justify-content: center; gap: 0.25rem; margin-top: 0.6rem; }
-
-.carousel-dot { width: 28px; height: 28px; border-radius: 50%; border: none; background: transparent; cursor: pointer; padding: 0; display: flex; align-items: center; justify-content: center; }
-.carousel-dot::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--border); transition: background 0.2s ease, transform 0.2s ease; }
-.carousel-dot.active::before { background: var(--sage); transform: scale(1.25); }
-
 /* ---------------- Product grid / cards ---------------- */
 .grid {
   display: grid;
@@ -396,7 +345,28 @@ header.scrolled { box-shadow: var(--shadow-sm); }
 
 .card:hover { transform: translateY(-5px); box-shadow: var(--shadow); }
 
-.card-img { overflow: hidden; aspect-ratio: 1 / 1; cursor: pointer; }
+.card-img { position: relative; overflow: hidden; aspect-ratio: 1 / 1; cursor: pointer; }
+
+.fav-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(255, 253, 250, 0.92);
+  backdrop-filter: blur(4px);
+  color: #8a6d1f;
+  font-size: 0.66rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 4px 8px;
+  border-radius: 999px;
+  box-shadow: var(--shadow-sm);
+}
+
+.fav-badge .icon { color: var(--gold); width: 0.85em; height: 0.85em; }
 .card img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.5s ease; }
 .card:hover img { transform: scale(1.06); }
 
@@ -544,7 +514,7 @@ footer .btn-primary { margin-top: 6px; }
 .float-wa { animation: wa-pulse 2.8s ease-in-out infinite; }
 
 @media (prefers-reduced-motion: reduce) {
-  .card, .order-btn, .float-wa, .carousel-track, .lightbox, .lightbox-content { transition: none; animation: none; }
+  .card, .order-btn, .float-wa, .lightbox, .lightbox-content { transition: none; animation: none; }
 }
 
 /* ---------------- Responsive ---------------- */
@@ -580,11 +550,5 @@ footer .btn-primary { margin-top: 6px; }
 
 @media (max-width: 560px) {
   .grid { gap: 1.1rem; }
-  .carousel-slide { aspect-ratio: 4 / 3; }
-  .carousel-arrow { width: 36px; height: 36px; }
-  .carousel-arrow.prev { left: 0.5rem; }
-  .carousel-arrow.next { right: 0.5rem; }
-  .carousel-caption { padding: 2rem 1rem 0.85rem; }
-  .carousel-caption span { font-size: 1.05rem; }
   .float-wa { width: 52px; height: 52px; }
 }

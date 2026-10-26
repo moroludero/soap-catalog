@@ -25,9 +25,7 @@ const I18N = {
     statAromas: "Aromas disponibles",
     statRecuerdos: "Diseños para eventos",
     statHandmade: "Hecho a mano",
-    destacadosEyebrow: "Los favoritos",
-    destacadosTitle: "Lo más pedido",
-    destacadosText: "Una muestra rápida de lo que más se repite en pedidos para regalos y eventos.",
+    favoriteBadge: "Más pedido",
     aromasEyebrow: "Para el día a día",
     aromasTitle: "Aromas",
     aromasText: "Jabones individuales de glicerina vegetal, cada uno con su propio aroma. Ideales para uso diario o como detalle sencillo.",
@@ -79,9 +77,7 @@ const I18N = {
     statAromas: "Scents available",
     statRecuerdos: "Event designs",
     statHandmade: "Handmade",
-    destacadosEyebrow: "The favorites",
-    destacadosTitle: "Most requested",
-    destacadosText: "A quick look at what shows up most in gift and event orders.",
+    favoriteBadge: "Most requested",
     aromasEyebrow: "For every day",
     aromasTitle: "Scents",
     aromasText: "Individual vegetable-glycerin soaps, each with its own scent. Great for everyday use or as a simple gift.",
@@ -102,13 +98,10 @@ const I18N = {
     footerTagline: "Handmade soaps, made with care, one at a time.",
     footerCta: "Contact on WhatsApp",
     footerCopy: "Handmade",
-    ariaFeatured: "Featured soaps",
-    ariaCarousel: "carousel",
     ariaPrev: "Previous",
     ariaNext: "Next",
     ariaClose: "Close",
     ariaMenu: "Open menu",
-    ariaDot: (i) => `Go to image ${i}`,
     ariaView: (name) => `View ${name} larger`,
     ariaFloat: "Order on WhatsApp",
     ariaFacebook: "Jabones Licha on Facebook",
@@ -133,9 +126,7 @@ const I18N = {
     statAromas: "Verfügbare Düfte",
     statRecuerdos: "Designs für Feste",
     statHandmade: "Handgefertigt",
-    destacadosEyebrow: "Die Favoriten",
-    destacadosTitle: "Am meisten bestellt",
-    destacadosText: "Ein schneller Blick auf das, was bei Geschenken und Festen am häufigsten bestellt wird.",
+    favoriteBadge: "Am meisten bestellt",
     aromasEyebrow: "Für den Alltag",
     aromasTitle: "Düfte",
     aromasText: "Einzelne Seifen aus pflanzlichem Glycerin, jede mit eigenem Duft. Ideal für den Alltag oder als kleines Geschenk.",
@@ -156,13 +147,10 @@ const I18N = {
     footerTagline: "Handgefertigte Seifen, mit Liebe gemacht, eine nach der anderen.",
     footerCta: "Per WhatsApp kontaktieren",
     footerCopy: "Handgefertigt",
-    ariaFeatured: "Ausgewählte Seifen",
-    ariaCarousel: "Karussell",
     ariaPrev: "Zurück",
     ariaNext: "Weiter",
     ariaClose: "Schließen",
     ariaMenu: "Menü öffnen",
-    ariaDot: (i) => `Zu Bild ${i} wechseln`,
     ariaView: (name) => `${name} vergrößert ansehen`,
     ariaFloat: "Per WhatsApp bestellen",
     ariaFacebook: "Jabones Licha auf Facebook",
@@ -314,8 +302,8 @@ function localized(product) {
 const AROMAS = PRODUCTS.filter((p) => p.category === "aromas");
 const RECUERDITOS = PRODUCTS.filter((p) => p.category === "recuerditos");
 
-// Curated highlight reel for the "Destacados" carousel
-const CAROUSEL_IDS = ["uva", "lavanda", "navidad", "unicornio", "baby-shower", "cheesecake"];
+// Curated list of best-sellers, flagged with a badge on their card
+const FAVORITE_IDS = new Set(["uva", "lavanda", "navidad", "unicornio", "baby-shower", "cheesecake"]);
 
 function waLink(productName) {
   const msg = encodeURIComponent(t("waMessage")(productName));
@@ -329,10 +317,14 @@ let recuerditosList = [];
 function cardHTML(p, idx, gridName) {
   const tagClass = p.category === "aromas" ? "tag-aroma" : "tag-recuerdo";
   const tagText = p.category === "aromas" ? t("tagAroma") : t("tagRecuerdo");
+  const favBadge = FAVORITE_IDS.has(p.id)
+    ? `<span class="fav-badge"><svg class="icon"><use href="#icon-star"/></svg> ${t("favoriteBadge")}</span>`
+    : "";
   return `
     <article class="card reveal">
       <div class="card-img" data-grid="${gridName}" data-index="${idx}" role="button" tabindex="0" aria-label="${t("ariaView")(p.name)}">
         <img src="${p.img}" alt="${p.name}" loading="lazy">
+        ${favBadge}
       </div>
       <div class="card-body">
         <span class="tag ${tagClass}">${tagText}</span>
@@ -399,127 +391,6 @@ document.addEventListener("keydown", (e) => {
 function renderStats() {
   document.getElementById("statAromasNum").textContent = AROMAS.length;
   document.getElementById("statRecuerdosNum").textContent = RECUERDITOS.length;
-}
-
-// ---------------- Hero carousel ("Destacados") ----------------
-let carouselIndex = 0;
-let carouselTimer = null;
-const CAROUSEL_INTERVAL = 4500;
-let carouselSlideEls = [];
-let carouselSlideProducts = [];
-
-function initCarousel() {
-  const track = document.getElementById("carousel-track");
-  const dotsWrap = document.getElementById("carousel-dots");
-  carouselSlideProducts = CAROUSEL_IDS.map((id) => PRODUCTS.find((p) => p.id === id)).filter(Boolean);
-
-  track.innerHTML = carouselSlideProducts
-    .map(
-      (p) => `
-    <div class="carousel-slide">
-      <img src="${p.img}" alt="">
-      <div class="carousel-caption"><span></span></div>
-    </div>
-  `
-    )
-    .join("");
-  carouselSlideEls = Array.from(track.querySelectorAll(".carousel-slide"));
-
-  dotsWrap.innerHTML = carouselSlideProducts
-    .map((_, i) => `<button class="carousel-dot${i === 0 ? " active" : ""}" data-i="${i}"></button>`)
-    .join("");
-
-  const dots = dotsWrap.querySelectorAll(".carousel-dot");
-  const total = carouselSlideProducts.length;
-
-  function goTo(i) {
-    carouselIndex = (i + total) % total;
-    track.style.transform = `translateX(-${carouselIndex * 100}%)`;
-    dots.forEach((d) => d.classList.remove("active"));
-    dots[carouselIndex].classList.add("active");
-    carouselSlideEls.forEach((s) => s.classList.remove("active"));
-    carouselSlideEls[carouselIndex].classList.add("active");
-  }
-
-  function next() {
-    goTo(carouselIndex + 1);
-  }
-  function prev() {
-    goTo(carouselIndex - 1);
-  }
-
-  function startAutoplay() {
-    stopAutoplay();
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    carouselTimer = setInterval(next, CAROUSEL_INTERVAL);
-  }
-  function stopAutoplay() {
-    if (carouselTimer) clearInterval(carouselTimer);
-    carouselTimer = null;
-  }
-
-  dots.forEach((d) =>
-    d.addEventListener("click", () => {
-      goTo(Number(d.dataset.i));
-      startAutoplay();
-    })
-  );
-  document.getElementById("carousel-prev").addEventListener("click", () => {
-    prev();
-    startAutoplay();
-  });
-  document.getElementById("carousel-next").addEventListener("click", () => {
-    next();
-    startAutoplay();
-  });
-
-  const wrap = document.getElementById("carousel");
-  wrap.addEventListener("mouseenter", stopAutoplay);
-  wrap.addEventListener("mouseleave", startAutoplay);
-  wrap.addEventListener("focusin", stopAutoplay);
-  wrap.addEventListener("focusout", startAutoplay);
-
-  let touchStartX = null;
-  track.addEventListener(
-    "touchstart",
-    (e) => {
-      touchStartX = e.touches[0].clientX;
-      stopAutoplay();
-    },
-    { passive: true }
-  );
-  track.addEventListener(
-    "touchend",
-    (e) => {
-      if (touchStartX === null) return;
-      const dx = e.changedTouches[0].clientX - touchStartX;
-      if (Math.abs(dx) > 40) (dx < 0 ? next() : prev());
-      touchStartX = null;
-      startAutoplay();
-    },
-    { passive: true }
-  );
-
-  updateCarouselTexts();
-  goTo(0);
-  startAutoplay();
-}
-
-function updateCarouselTexts() {
-  carouselSlideProducts.forEach((p, i) => {
-    const tr = PRODUCT_I18N[p.id][currentLang];
-    const el = carouselSlideEls[i];
-    if (!el) return;
-    el.querySelector("img").alt = tr.name;
-    el.querySelector(".carousel-caption span").textContent = tr.name;
-  });
-  document.querySelectorAll("#carousel-dots .carousel-dot").forEach((d, i) => {
-    d.setAttribute("aria-label", t("ariaDot")(i + 1));
-  });
-  document.getElementById("carousel-prev").setAttribute("aria-label", t("ariaPrev"));
-  document.getElementById("carousel-next").setAttribute("aria-label", t("ariaNext"));
-  document.getElementById("carousel").setAttribute("aria-label", t("ariaFeatured"));
-  document.getElementById("carousel").setAttribute("aria-roledescription", t("ariaCarousel"));
 }
 
 // ---------------- Lightbox ----------------
@@ -625,7 +496,6 @@ function setLanguage(lang) {
 
   applyStaticText();
   renderGrids();
-  updateCarouselTexts();
   updateLightboxAria();
 
   document.getElementById("menuToggle").setAttribute("aria-label", t("ariaMenu"));
@@ -655,7 +525,6 @@ document.addEventListener("DOMContentLoaded", () => {
   initLangSwitch();
   initMobileNav();
   initHeaderScroll();
-  initCarousel();
   initLightbox();
   setLanguage(currentLang);
 });
