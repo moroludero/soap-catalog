@@ -412,6 +412,48 @@ header.scrolled { box-shadow: var(--shadow-sm); }
 .step h3 { font-size: 1.05rem; margin-bottom: 0.35em; }
 .step p { color: var(--muted); font-size: 0.9rem; margin: 0; }
 
+/* ---------------- Testimonials ---------------- */
+.testimonials { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 24px; }
+
+.testimonial-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 26px 24px;
+  box-shadow: var(--shadow-sm);
+  text-align: center;
+}
+
+.testimonial-card .stars { display: flex; justify-content: center; gap: 2px; color: var(--gold); margin-bottom: 12px; }
+.testimonial-card .stars .icon { width: 1rem; height: 1rem; }
+.testimonial-card .stars .icon.empty { color: var(--border); }
+
+.testimonial-card .quote {
+  font-family: "Fraunces", serif;
+  font-style: italic;
+  color: var(--ink);
+  font-size: 1.02rem;
+  line-height: 1.5;
+  margin: 0 0 14px;
+}
+
+.testimonial-card .author { color: var(--sage-dark); font-weight: 600; font-size: 0.88rem; margin: 0; }
+
+@media (max-width: 760px) {
+  .testimonials { grid-template-columns: 1fr; gap: 18px; }
+}
+
+/* Instagram embed */
+.instagram-embed {
+  max-width: 680px;
+  margin: 0 auto;
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.instagram-fallback { text-align: center; }
+
 /* ---------------- Footer band ---------------- */
 footer {
   background: linear-gradient(155deg, var(--ink), #232a1f);

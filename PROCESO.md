@@ -213,11 +213,100 @@ botón abría WhatsApp. Se intercambiaron las clases: "Ver catálogo" ahora es e
 botón secundario (contorno salvia), y el verde de WhatsApp queda reservado
 exclusivamente para acciones de WhatsApp en todo el sitio.
 
+## 21. Sección de Testimonios (2026-10-26)
+
+A partir de una auditoría de sitios de la competencia (parte de una
+investigación de leads para Moroludero Marketing Digital), se agregó una
+sección "Testimonios" (3 tarjetas con estrellas, cita y nombre) entre "Cómo
+pedir" y el pie de página, traducida en ES/EN/DE (`testimoniosEyebrow`/
+`testimoniosTitle` en `app.js`, estilos `.testimonials`/`.testimonial-card` en
+`styles.css`, reutiliza el ícono `#icon-star` que ya existía sin usar en el
+sprite SVG).
+
+**Importante:** las 3 citas son contenido de muestra (a pedido explícito de
+Monica, solo para previsualizar el diseño) — no son reseñas reales de
+clientas. Cada tarjeta dice "Clienta de muestra — reemplazar antes de
+publicar" en el nombre, precisamente para que sea imposible confundirlas con
+testimonios genuinos si se suben así por accidente. **Pendiente:** reemplazar
+por 3 reseñas reales de Licha antes de que esto se publique en serio.
+
+**Actualización (mismo día):** Monica pasó 3 reseñas reales de clientas de
+Licha (exportadas de un chat de WhatsApp, con nombre, ciudad y calificación de
+cada una). Se reemplazaron las 3 tarjetas de muestra por las reales: Laura G.
+(jabón de sábila), Andrés M. (recuerdito temática casa nueva) y Sofía R.
+(recuerditos de baby shower) — las tres de 5 estrellas.
+
+Antes de aceptarlas se verificó que ninguna coincidiera con contenido inventado
+por Claude (al primer intento, Monica pegó sin querer las 3 citas de muestra
+tal cual, palabra por palabra — se detectó y se rechazó esa vez; esta segunda
+entrega sí trae nombres, ciudades y detalles específicos consistentes con
+productos reales del catálogo: sábila = Aloe Vera, casa nueva y baby shower =
+sus recuerditos correspondientes).
+
+## 22. SEO y analítica
+
+Se encontró que el sitio no tenía: etiquetas Open Graph/Twitter Card (el link
+no mostraba foto/descripción al compartirse por WhatsApp o Facebook — el canal
+de ventas principal del negocio), datos estructurados para buscadores,
+`robots.txt`/`sitemap.xml`, ni ningún tipo de analítica de visitas. Se agregó:
+
+- **Open Graph / Twitter Card** en `<head>` (`og:title`, `og:description`,
+  `og:image` usando `images/hero-naranja.jpg`, `og:url`, `twitter:card`, etc.)
+  — para que el link se vea como catálogo real al compartirse.
+- **`<link rel="canonical">`** (`theme-color` ya existía desde el punto 11).
+- **Datos estructurados JSON-LD** (`schema.org/LocalBusiness`) con nombre,
+  teléfono y redes sociales. **Sin dirección física**, a propósito: nunca se
+  confirmó una (ver punto 7, sigue pendiente), y el punto 1 de este documento
+  es explícito en no inventar datos sin confirmarlos con el usuario.
+- **`robots.txt`** y **`sitemap.xml`** en la raíz del proyecto.
+- **Analítica (GoatCounter)**, gratuita y sin cookies: el script ya está en el
+  sitio pero no cuenta nada todavía — **pendiente que Monica cree la cuenta
+  gratis en goatcounter.com con el código de sitio "jabones-licha"** (o
+  cambiar el código en `index.html` por el que elija). Verificado en local: el
+  script no cuenta en `localhost` por diseño propio de GoatCounter (warning
+  esperado en consola, no es un error).
+
+Todo verificado con Playwright en local: JSON-LD parsea como JSON válido,
+`robots.txt`/`sitemap.xml` se sirven correctamente, sin errores de consola.
+
+## 23. Sección de Instagram (feed en vivo, pendiente de activar)
+
+Monica pidió agregar lo que se vio en un sitio de la competencia (quererte.mx):
+mostrar las últimas fotos de Instagram directamente en el sitio, en vez de solo
+un ícono-link muerto en el footer. Se eligió el enfoque de widget automático de
+terceros (SnapWidget) sobre curar una mini-galería manual.
+
+Se agregó una sección "Instagram" nueva (entre Testimonios y el pie de página)
+con:
+- El `<iframe>` de SnapWidget **comentado** dentro de `index.html`, con
+  instrucciones exactas de los 3 pasos para activarlo (crear cuenta gratis en
+  snapwidget.com, conectar @jaboneslicha, pegar el iframe real reemplazando el
+  comentario).
+- Un botón de respaldo "Ver en Instagram" siempre visible mientras tanto, para
+  que la sección nunca se vea vacía o rota si se publica antes de activar el
+  feed.
+- Estilos `.instagram-embed`/`.instagram-fallback` en `styles.css`, claves
+  `instagramEyebrow`/`instagramTitle`/`instagramCta` en ES/EN/DE en `app.js`.
+
+**Bug real encontrado y corregido durante la verificación:** el comentario de
+instrucciones incluía literalmente las secuencias de apertura/cierre de
+comentario HTML como texto explicativo, lo cual cerraba el comentario antes de
+tiempo y dejaba un trozo de texto suelto visible en la página (mismo bug que
+en `KintroCarpintero`, corregido igual en ambos). Verificado de nuevo con
+Playwright, forzando recarga sin caché del navegador (`?v=2` en la URL).
+
+**Pendiente:** crear la cuenta en snapwidget.com y pegar el iframe real para
+que el feed quede en vivo (ver instrucciones dentro del comentario en
+`index.html`).
+
 ## Pendientes
 
 - [ ] Confirmar que el botón de WhatsApp (+53 5 3335221) es el número correcto y está activo
 - [ ] Revisar si faltan productos o precios que agregar
 - [ ] Agregar el link del sitio al perfil de Instagram/Facebook si aún no está
+- [ ] Crear la cuenta gratis en goatcounter.com (código de sitio "jabones-licha") para activar la analítica
+- [ ] Crear la cuenta gratis en snapwidget.com, conectar @jaboneslicha, y pegar el iframe real en `index.html` (punto 23) para activar el feed de Instagram
+- [ ] `git push` de todos los cambios de esta sesión (2026-10-26) cuando Monica confirme — siguen solo en local
 
 ## Cómo editar el catálogo más adelante
 
