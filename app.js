@@ -93,6 +93,12 @@ const I18N = {
     cartNotesLine: "Entrega / Notas",
     cartTotalLine: "Total",
     cartTotalLabel: "Total a pagar",
+    locationShareBtn: "Compartir mi ubicación de Google Maps",
+    locationLoading: "Obteniendo tu ubicación…",
+    locationAdded: "Ubicación agregada ✓",
+    locationError: "No se pudo obtener tu ubicación. Puedes escribir la dirección arriba.",
+    locationDenied: "Permiso de ubicación denegado. Puedes escribir la dirección arriba.",
+    locationLine: "Ubicación (Google Maps)",
   },
   en: {
     navAromas: "Scents",
@@ -163,6 +169,12 @@ const I18N = {
     cartNotesLine: "Delivery / Notes",
     cartTotalLine: "Total",
     cartTotalLabel: "Total due",
+    locationShareBtn: "Share my Google Maps location",
+    locationLoading: "Getting your location…",
+    locationAdded: "Location added ✓",
+    locationError: "Couldn't get your location. You can type the address above.",
+    locationDenied: "Location permission denied. You can type the address above.",
+    locationLine: "Location (Google Maps)",
   },
   de: {
     navAromas: "Düfte",
@@ -233,6 +245,12 @@ const I18N = {
     cartNotesLine: "Lieferung / Notizen",
     cartTotalLine: "Gesamtbetrag",
     cartTotalLabel: "Gesamtbetrag",
+    locationShareBtn: "Meinen Google-Maps-Standort teilen",
+    locationLoading: "Standort wird ermittelt…",
+    locationAdded: "Standort hinzugefügt ✓",
+    locationError: "Standort konnte nicht ermittelt werden. Du kannst die Adresse oben eingeben.",
+    locationDenied: "Standortzugriff verweigert. Du kannst die Adresse oben eingeben.",
+    locationLine: "Standort (Google Maps)",
   },
 };
 
@@ -493,7 +511,49 @@ function waCartMessage(name, notes) {
   let msg = `${t("cartGreeting")}\n${lines.join("\n")}\n\n${t("cartTotalLine")}: ${priceLabel(cartTotal())}`;
   if (name) msg += `\n\n${t("cartNameLine")}: ${name}`;
   if (notes) msg += `\n${t("cartNotesLine")}: ${notes}`;
+  if (cartLocation) msg += `\n${t("locationLine")}: ${cartLocation.link}`;
   return msg;
+}
+
+// ---------------- Google Maps location share ----------------
+let cartLocation = null; // { lat, lng, link }
+
+function requestCartLocation() {
+  const btn = document.getElementById("cartLocationBtn");
+  const status = document.getElementById("cartLocationStatus");
+  status.hidden = false;
+  if (!navigator.geolocation) {
+    status.className = "location-status error";
+    status.textContent = t("locationError");
+    return;
+  }
+  btn.disabled = true;
+  status.className = "location-status";
+  status.textContent = t("locationLoading");
+  navigator.geolocation.getCurrentPosition(
+    (pos) => {
+      const { latitude, longitude } = pos.coords;
+      cartLocation = { lat: latitude, lng: longitude, link: `https://www.google.com/maps?q=${latitude},${longitude}` };
+      status.className = "location-status success";
+      status.textContent = t("locationAdded");
+      btn.disabled = false;
+    },
+    (err) => {
+      cartLocation = null;
+      status.className = "location-status error";
+      status.textContent = err.code === err.PERMISSION_DENIED ? t("locationDenied") : t("locationError");
+      btn.disabled = false;
+    },
+    { enableHighAccuracy: true, timeout: 10000 }
+  );
+}
+
+function resetCartLocation() {
+  cartLocation = null;
+  const status = document.getElementById("cartLocationStatus");
+  status.hidden = true;
+  status.textContent = "";
+  status.className = "location-status";
 }
 
 function openCartDrawer() {
@@ -515,6 +575,7 @@ function initCartDrawer() {
   document.getElementById("cartBar").addEventListener("click", openCartDrawer);
   document.getElementById("cartClose").addEventListener("click", closeCartDrawer);
   document.getElementById("cartBackdrop").addEventListener("click", closeCartDrawer);
+  document.getElementById("cartLocationBtn").addEventListener("click", requestCartLocation);
   document.getElementById("cartSend").addEventListener("click", () => {
     if (cartCount() === 0) return;
     const name = document.getElementById("cartName").value.trim();
@@ -526,6 +587,7 @@ function initCartDrawer() {
     renderAllQtyControls();
     updateCartBar();
     renderCartDrawerItems();
+    resetCartLocation();
     document.getElementById("cartName").value = "";
     document.getElementById("cartNotes").value = "";
     closeCartDrawer();
@@ -754,6 +816,12 @@ function setLanguage(lang) {
 
   if (document.getElementById("cartDrawer").classList.contains("open")) {
     renderCartDrawerItems();
+  }
+
+  if (cartLocation) {
+    const status = document.getElementById("cartLocationStatus");
+    status.className = "location-status success";
+    status.textContent = t("locationAdded");
   }
 }
 

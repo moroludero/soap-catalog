@@ -335,6 +335,27 @@ por línea y total — ej.: "2x Menta — $60 MXN" + "Total: $110 MXN". Verifica
 de nuevo con Playwright: la matemática del total cuadra al cambiar
 cantidades, y el mensaje final generado es correcto.
 
+## 25. Compartir ubicación de Google Maps en el carrito (2026-10-27)
+
+A pedido de Monica, se agregó un botón opcional **"Compartir mi ubicación de
+Google Maps"** en el panel del carrito, debajo de "Entrega o notas". Usa la
+API de geolocalización del navegador (`navigator.geolocation`) para obtener
+coordenadas exactas y arma un link `https://www.google.com/maps?q=lat,lng`,
+que se agrega como línea extra en el mensaje final de WhatsApp — además del
+campo de texto libre, no en su lugar, porque el navegador puede negar el
+permiso o el usuario puede preferir escribir la dirección en vez de compartir
+su ubicación exacta.
+
+Requiere HTTPS (o `localhost`) para funcionar — GitHub Pages ya sirve el
+sitio por HTTPS, así que funcionará en producción sin cambios. Verificado en
+local simulando el permiso de geolocalización con Playwright (coordenadas de
+prueba en Cancún): el botón muestra "Obteniendo tu ubicación…" y luego
+"Ubicación agregada ✓", y el mensaje final de WhatsApp incluye la línea
+"Ubicación (Google Maps): https://www.google.com/maps?q=21.1619,-86.8515"
+correctamente. La ubicación se limpia después de cada envío (no se guarda en
+`localStorage`, a diferencia del carrito, por ser un dato más sensible y
+puntual).
+
 ## Pendientes
 
 - [ ] Confirmar que el botón de WhatsApp (+53 5 3335221) es el número correcto y está activo
