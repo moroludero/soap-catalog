@@ -1,8 +1,20 @@
 // ---- EDIT THIS LINE WITH THE REAL WHATSAPP NUMBER ----
 const CONFIG = {
   whatsappNumber: "5353335221", // E.164 without +
+  currency: "MXN",
+  // Price by category. To give one specific product its own price instead,
+  // add a `price` field to that entry in PRODUCTS below — it overrides this.
+  categoryPrices: { aromas: 30, recuerditos: 50 },
 };
 // --------------------------------------------------------
+
+function priceFor(product) {
+  return product.price != null ? product.price : CONFIG.categoryPrices[product.category];
+}
+
+function priceLabel(amount) {
+  return `$${amount} ${CONFIG.currency}`;
+}
 
 const LANGS = ["es", "en", "de"];
 const savedLang = localStorage.getItem("lang");
@@ -65,6 +77,22 @@ const I18N = {
     pageTitle: "Jabones Licha — Catálogo de jabones artesanales",
     metaDesc: "Jabones Licha: jabones artesanales de glicerina vegetal, aromas y recuerditos para eventos. Pide por WhatsApp.",
     waMessage: (name) => `Hola, me interesa el jabón: ${name}`,
+    addToOrder: "Agregar al pedido",
+    ariaAddOne: "Agregar uno más",
+    ariaRemoveOne: "Quitar uno",
+    viewOrder: "Ver pedido",
+    cartTitle: "Tu pedido",
+    cartEmpty: "Tu pedido está vacío. Agrega jabones desde el catálogo.",
+    cartNameLabel: "Tu nombre",
+    cartNamePlaceholder: "Ej. María López",
+    cartNotesLabel: "Entrega o notas",
+    cartNotesPlaceholder: "Ej. Entregar por la tarde",
+    cartSendBtn: "Enviar pedido por WhatsApp",
+    cartGreeting: "Hola, quiero pedir:",
+    cartNameLine: "Nombre",
+    cartNotesLine: "Entrega / Notas",
+    cartTotalLine: "Total",
+    cartTotalLabel: "Total a pagar",
   },
   en: {
     navAromas: "Scents",
@@ -119,6 +147,22 @@ const I18N = {
     pageTitle: "Jabones Licha — Handmade Soap Catalog",
     metaDesc: "Jabones Licha: handmade vegetable-glycerin soaps, scented bars and event favors. Order on WhatsApp.",
     waMessage: (name) => `Hi! I'm interested in the soap: ${name}`,
+    addToOrder: "Add to order",
+    ariaAddOne: "Add one more",
+    ariaRemoveOne: "Remove one",
+    viewOrder: "View order",
+    cartTitle: "Your order",
+    cartEmpty: "Your order is empty. Add soaps from the catalog.",
+    cartNameLabel: "Your name",
+    cartNamePlaceholder: "E.g. Maria Lopez",
+    cartNotesLabel: "Delivery or notes",
+    cartNotesPlaceholder: "E.g. Deliver in the afternoon",
+    cartSendBtn: "Send order on WhatsApp",
+    cartGreeting: "Hi, I'd like to order:",
+    cartNameLine: "Name",
+    cartNotesLine: "Delivery / Notes",
+    cartTotalLine: "Total",
+    cartTotalLabel: "Total due",
   },
   de: {
     navAromas: "Düfte",
@@ -173,6 +217,22 @@ const I18N = {
     pageTitle: "Jabones Licha — Katalog für handgefertigte Seifen",
     metaDesc: "Jabones Licha: handgefertigte Glycerinseifen, Duftseifen und Gastgeschenke. Bestellung per WhatsApp.",
     waMessage: (name) => `Hallo! Ich interessiere mich für die Seife: ${name}`,
+    addToOrder: "Zur Bestellung hinzufügen",
+    ariaAddOne: "Eins mehr hinzufügen",
+    ariaRemoveOne: "Eins entfernen",
+    viewOrder: "Bestellung ansehen",
+    cartTitle: "Deine Bestellung",
+    cartEmpty: "Deine Bestellung ist leer. Füge Seifen aus dem Katalog hinzu.",
+    cartNameLabel: "Dein Name",
+    cartNamePlaceholder: "Z. B. Maria Lopez",
+    cartNotesLabel: "Lieferung oder Notizen",
+    cartNotesPlaceholder: "Z. B. Lieferung am Nachmittag",
+    cartSendBtn: "Bestellung per WhatsApp senden",
+    cartGreeting: "Hallo, ich möchte bestellen:",
+    cartNameLine: "Name",
+    cartNotesLine: "Lieferung / Notizen",
+    cartTotalLine: "Gesamtbetrag",
+    cartTotalLabel: "Gesamtbetrag",
   },
 };
 
@@ -320,9 +380,168 @@ const RECUERDITOS = PRODUCTS.filter((p) => p.category === "recuerditos");
 // Curated list of best-sellers, flagged with a badge on their card
 const FAVORITE_IDS = new Set(["uva", "lavanda", "navidad", "unicornio", "baby-shower", "cheesecake"]);
 
-function waLink(productName) {
-  const msg = encodeURIComponent(t("waMessage")(productName));
-  return `https://wa.me/${CONFIG.whatsappNumber}?text=${msg}`;
+// ---------------- Cart (multi-item WhatsApp order) ----------------
+let CART = {}; // { productId: qty }
+
+function loadCart() {
+  try {
+    const saved = JSON.parse(localStorage.getItem("cart") || "{}");
+    if (saved && typeof saved === "object") CART = saved;
+  } catch (e) {
+    CART = {};
+  }
+}
+
+function saveCart() {
+  localStorage.setItem("cart", JSON.stringify(CART));
+}
+
+function cartCount() {
+  return Object.values(CART).reduce((sum, q) => sum + q, 0);
+}
+
+function addToCart(id) {
+  CART[id] = (CART[id] || 0) + 1;
+  saveCart();
+  renderQtyControl(id);
+  updateCartBar();
+  renderCartDrawerItems();
+}
+
+function removeFromCart(id) {
+  if (!CART[id]) return;
+  CART[id] -= 1;
+  if (CART[id] <= 0) delete CART[id];
+  saveCart();
+  renderQtyControl(id);
+  updateCartBar();
+  renderCartDrawerItems();
+}
+
+function qtyControlHTML(id) {
+  const qty = CART[id] || 0;
+  if (qty === 0) {
+    return `<button type="button" class="btn-add" data-action="add" data-id="${id}"><svg class="icon"><use href="#icon-cart"/></svg> ${t("addToOrder")}</button>`;
+  }
+  return `<div class="qty-stepper">
+    <button type="button" class="qty-btn" data-action="dec" data-id="${id}" aria-label="${t("ariaRemoveOne")}">&minus;</button>
+    <span class="qty-value">${qty}</span>
+    <button type="button" class="qty-btn" data-action="inc" data-id="${id}" aria-label="${t("ariaAddOne")}">+</button>
+  </div>`;
+}
+
+function renderQtyControl(id) {
+  document.querySelectorAll(`.qty-control[data-id="${id}"]`).forEach((el) => {
+    el.innerHTML = qtyControlHTML(id);
+  });
+}
+
+function renderAllQtyControls() {
+  PRODUCTS.forEach((p) => renderQtyControl(p.id));
+}
+
+function updateCartBar() {
+  const count = cartCount();
+  document.getElementById("cartBarCount").textContent = count;
+  document.getElementById("cartBar").classList.toggle("visible", count > 0);
+}
+
+function cartTotal() {
+  return Object.keys(CART)
+    .filter((id) => CART[id] > 0)
+    .reduce((sum, id) => sum + priceFor(PRODUCTS.find((p) => p.id === id)) * CART[id], 0);
+}
+
+function renderCartDrawerItems() {
+  const wrap = document.getElementById("cartItems");
+  const form = document.getElementById("cartForm");
+  const totalRow = document.getElementById("cartTotalRow");
+  const entries = Object.keys(CART).filter((id) => CART[id] > 0);
+  if (entries.length === 0) {
+    wrap.innerHTML = `<p class="cart-empty">${t("cartEmpty")}</p>`;
+    form.style.display = "none";
+    totalRow.style.display = "none";
+    return;
+  }
+  form.style.display = "";
+  totalRow.style.display = "";
+  wrap.innerHTML = entries
+    .map((id) => {
+      const product = PRODUCTS.find((p) => p.id === id);
+      const name = PRODUCT_I18N[id][currentLang].name;
+      const subtotal = priceFor(product) * CART[id];
+      return `
+        <div class="cart-item">
+          <div class="cart-item-info">
+            <span class="cart-item-name">${name}</span>
+            <span class="cart-item-price">${priceLabel(priceFor(product))} × ${CART[id]} = ${priceLabel(subtotal)}</span>
+          </div>
+          <div class="qty-control" data-id="${id}">${qtyControlHTML(id)}</div>
+        </div>`;
+    })
+    .join("");
+  document.getElementById("cartTotalValue").textContent = priceLabel(cartTotal());
+}
+
+function waCartMessage(name, notes) {
+  const entries = Object.keys(CART).filter((id) => CART[id] > 0);
+  const lines = entries.map((id) => {
+    const product = PRODUCTS.find((p) => p.id === id);
+    const subtotal = priceFor(product) * CART[id];
+    return `• ${CART[id]}x ${PRODUCT_I18N[id][currentLang].name} — ${priceLabel(subtotal)}`;
+  });
+  let msg = `${t("cartGreeting")}\n${lines.join("\n")}\n\n${t("cartTotalLine")}: ${priceLabel(cartTotal())}`;
+  if (name) msg += `\n\n${t("cartNameLine")}: ${name}`;
+  if (notes) msg += `\n${t("cartNotesLine")}: ${notes}`;
+  return msg;
+}
+
+function openCartDrawer() {
+  renderCartDrawerItems();
+  const drawer = document.getElementById("cartDrawer");
+  drawer.classList.add("open");
+  drawer.setAttribute("aria-hidden", "false");
+  document.body.style.overflow = "hidden";
+}
+
+function closeCartDrawer() {
+  const drawer = document.getElementById("cartDrawer");
+  drawer.classList.remove("open");
+  drawer.setAttribute("aria-hidden", "true");
+  document.body.style.overflow = "";
+}
+
+function initCartDrawer() {
+  document.getElementById("cartBar").addEventListener("click", openCartDrawer);
+  document.getElementById("cartClose").addEventListener("click", closeCartDrawer);
+  document.getElementById("cartBackdrop").addEventListener("click", closeCartDrawer);
+  document.getElementById("cartSend").addEventListener("click", () => {
+    if (cartCount() === 0) return;
+    const name = document.getElementById("cartName").value.trim();
+    const notes = document.getElementById("cartNotes").value.trim();
+    const msg = waCartMessage(name, notes);
+    window.open(`https://wa.me/${CONFIG.whatsappNumber}?text=${encodeURIComponent(msg)}`, "_blank", "noopener");
+    CART = {};
+    saveCart();
+    renderAllQtyControls();
+    updateCartBar();
+    renderCartDrawerItems();
+    document.getElementById("cartName").value = "";
+    document.getElementById("cartNotes").value = "";
+    closeCartDrawer();
+  });
+  document.addEventListener("keydown", (e) => {
+    if (!document.getElementById("cartDrawer").classList.contains("open")) return;
+    if (e.key === "Escape") closeCartDrawer();
+  });
+  document.addEventListener("click", (e) => {
+    const btn = e.target.closest("[data-action]");
+    if (!btn) return;
+    const id = btn.dataset.id;
+    const action = btn.dataset.action;
+    if (action === "add" || action === "inc") addToCart(id);
+    else if (action === "dec") removeFromCart(id);
+  });
 }
 
 // ---------------- Product grids (no filter — each section is fixed) ----------------
@@ -345,7 +564,8 @@ function cardHTML(p, idx, gridName) {
         <span class="tag ${tagClass}">${tagText}</span>
         <h3>${p.name}</h3>
         <p>${p.desc}</p>
-        <a class="order-btn" href="${waLink(p.name)}" target="_blank" rel="noopener"><svg class="icon"><use href="#icon-whatsapp"/></svg> ${t("orderBtn")}</a>
+        <span class="price">${priceLabel(priceFor(p))}</span>
+        <div class="qty-control" data-id="${p.id}"></div>
       </div>
     </article>`;
 }
@@ -362,6 +582,7 @@ function renderGrids() {
     .map((p, i) => cardHTML(p, i, "recuerditos"))
     .join("");
 
+  renderAllQtyControls();
   observeReveals();
 }
 
@@ -447,8 +668,10 @@ function renderLightbox() {
   lbTag.className = `tag ${p.category === "aromas" ? "tag-aroma" : "tag-recuerdo"}`;
   document.getElementById("lightbox-title").textContent = p.name;
   document.getElementById("lightbox-desc").textContent = p.desc;
-  document.getElementById("lightbox-order").href = waLink(p.name);
-  document.getElementById("lightbox-order-label").textContent = t("orderBtn");
+  document.getElementById("lightbox-price").textContent = priceLabel(priceFor(p));
+  const lbQty = document.getElementById("lightbox-qty");
+  lbQty.dataset.id = p.id;
+  lbQty.innerHTML = qtyControlHTML(p.id);
 }
 
 function initLightbox() {
@@ -498,6 +721,9 @@ function applyStaticText() {
   document.querySelectorAll("[data-i18n]").forEach((el) => {
     el.textContent = t(el.dataset.i18n);
   });
+  document.querySelectorAll("[data-i18n-placeholder]").forEach((el) => {
+    el.setAttribute("placeholder", t(el.dataset.i18nPlaceholder));
+  });
 }
 
 function setLanguage(lang) {
@@ -515,6 +741,8 @@ function setLanguage(lang) {
 
   document.getElementById("menuToggle").setAttribute("aria-label", t("ariaMenu"));
   document.getElementById("float-wa").setAttribute("aria-label", t("ariaFloat"));
+  document.getElementById("cartBar").setAttribute("aria-label", t("viewOrder"));
+  document.getElementById("cartClose").setAttribute("aria-label", t("ariaClose"));
   const fbLink = document.querySelector('.social-row a[href*="facebook.com"]');
   const igLink = document.querySelector('.social-row a[href*="instagram.com"]');
   if (fbLink) fbLink.setAttribute("aria-label", t("ariaFacebook"));
@@ -523,6 +751,10 @@ function setLanguage(lang) {
   document.querySelectorAll("#langSwitch button").forEach((b) => {
     b.classList.toggle("active", b.dataset.lang === lang);
   });
+
+  if (document.getElementById("cartDrawer").classList.contains("open")) {
+    renderCartDrawerItems();
+  }
 }
 
 function initLangSwitch() {
@@ -536,10 +768,13 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("float-wa").href = `https://wa.me/${CONFIG.whatsappNumber}`;
   document.getElementById("heroWa").href = `https://wa.me/${CONFIG.whatsappNumber}`;
   document.getElementById("navWa").href = `https://wa.me/${CONFIG.whatsappNumber}`;
+  loadCart();
   renderStats();
   initLangSwitch();
   initMobileNav();
   initHeaderScroll();
   initLightbox();
+  initCartDrawer();
   setLanguage(currentLang);
+  updateCartBar();
 });

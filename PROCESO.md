@@ -299,14 +299,50 @@ Playwright, forzando recarga sin caché del navegador (`?v=2` en la URL).
 que el feed quede en vivo (ver instrucciones dentro del comentario en
 `index.html`).
 
+## 24. Pedido múltiple por WhatsApp (carrito) — 2026-10-27
+
+Monica vio una demo de Gemini (catálogo con carrito) y pidió probar la misma
+idea aquí: en vez de un botón "Pedir por WhatsApp" por producto (un mensaje
+por jabón), ahora cada producto tiene un control de cantidad
+("Agregar al pedido" → stepper −/cantidad/+). Una barra flotante abajo a la
+izquierda ("Ver pedido", con contador) abre un panel lateral con todos los
+productos elegidos, un campo de nombre y uno de dirección/notas, y un botón
+"Enviar pedido por WhatsApp" que arma **un solo mensaje** con todos los
+artículos, cantidades, nombre y notas.
+
+- Reemplaza el botón `.order-btn` por producto (tanto en las tarjetas como en
+  el lightbox) — ya no hay un link de WhatsApp directo por jabón, todo pasa
+  por el carrito, para no tener dos flujos de pedido distintos conviviendo.
+- El carrito se guarda en `localStorage` (clave `cart`), así que sobrevive a
+  un refresco de página.
+- Traducido en ES/EN/DE igual que el resto del sitio.
+- Verificado con Playwright en local (desktop y móvil 390×844): agregar/quitar
+  cantidades, abrir/cerrar el panel, enviar el pedido genera correctamente
+  `https://wa.me/5353335221?text=Hola%2C+quiero+pedir%3A...` con los
+  productos, nombre y notas, el carrito se vacía después de enviar, y no hay
+  errores de consola.
+
+**Actualización (mismo día): precios agregados.** Monica confirmó precio por
+categoría: **$30 MXN** para Aromas (barra individual) y **$50 MXN** para
+Recuerditos (diseños con forma + empaque, más trabajo). Se agregó
+`CONFIG.categoryPrices` en `app.js` (`{ aromas: 30, recuerditos: 50 }`), con
+soporte para poner un precio distinto a un producto puntual (ej. si el set de
+Navidad, que son 3 piezas, debiera costar más) agregando un campo `price` a
+esa entrada en `PRODUCTS` sin tocar las demás. Ahora cada tarjeta y el
+lightbox muestran el precio, el panel del carrito muestra subtotal por
+producto y el total general, y el mensaje final de WhatsApp incluye precio
+por línea y total — ej.: "2x Menta — $60 MXN" + "Total: $110 MXN". Verificado
+de nuevo con Playwright: la matemática del total cuadra al cambiar
+cantidades, y el mensaje final generado es correcto.
+
 ## Pendientes
 
 - [ ] Confirmar que el botón de WhatsApp (+53 5 3335221) es el número correcto y está activo
-- [ ] Revisar si faltan productos o precios que agregar
+- [ ] Revisar si falta algún producto por agregar al catálogo (precios por categoría ya confirmados y cargados, punto 24)
 - [ ] Agregar el link del sitio al perfil de Instagram/Facebook si aún no está
 - [ ] Crear la cuenta gratis en goatcounter.com (código de sitio "jabones-licha") para activar la analítica
 - [ ] Crear la cuenta gratis en snapwidget.com, conectar @jaboneslicha, y pegar el iframe real en `index.html` (punto 23) para activar el feed de Instagram
-- [ ] `git push` de todos los cambios de esta sesión (2026-10-26) cuando Monica confirme — siguen solo en local
+- [ ] `git push` de todos los cambios de esta sesión (2026-10-26 y 2026-10-27) cuando Monica confirme — siguen solo en local
 
 ## Cómo editar el catálogo más adelante
 
