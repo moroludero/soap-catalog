@@ -8,6 +8,12 @@ const CONFIG = {
 };
 // --------------------------------------------------------
 
+// Products Felicia adds herself from her phone (via admin.html) live in this
+// API instead of this file. They're merged into PRODUCTS at load time — see
+// loadApiProducts() near the bottom. If the API is unreachable, the site
+// still works with just the products hardcoded below.
+const API_BASE = "https://moroludero-catalogos-api.azurewebsites.net";
+
 function priceFor(product) {
   return product.price != null ? product.price : CONFIG.categoryPrices[product.category];
 }
@@ -258,142 +264,69 @@ function t(key) {
   return I18N[currentLang][key];
 }
 
-const PRODUCTS = [
-  // ---- Jabones por aroma ----
-  { id: "menta", category: "aromas", img: "images/WhatsApp Image 2026-10-13 at 7.23.10 PM.jpeg" },
-  { id: "cheesecake", category: "aromas", img: "images/WhatsApp Image 2026-10-13 at 7.23.12 PM.jpeg" },
-  { id: "canela", category: "aromas", img: "images/WhatsApp Image 2026-10-13 at 7.23.16 PM.jpeg" },
-  { id: "uva", category: "aromas", img: "images/WhatsApp Image 2026-10-13 at 7.23.17 PM.jpeg" },
-  { id: "naranja", category: "aromas", img: "images/WhatsApp Image 2026-10-13 at 7.23.11 PM (2).jpeg" },
-  { id: "lavanda", category: "aromas", img: "images/WhatsApp Image 2026-10-13 at 7.23.12 PM (2).jpeg" },
-  { id: "flores", category: "aromas", img: "images/WhatsApp Image 2026-10-13 at 7.23.12 PM (5).jpeg" },
-  { id: "limon", category: "aromas", img: "images/WhatsApp Image 2026-10-13 at 7.23.19 PM (2).jpeg" },
-  { id: "arbol-de-te", category: "aromas", img: "images/WhatsApp Image 2026-10-13 at 7.23.21 PM.jpeg" },
-  { id: "miel-avena", category: "aromas", img: "images/WhatsApp Image 2026-10-13 at 7.23.20 PM.jpeg" },
-  { id: "aloe-vera", category: "aromas", img: "images/WhatsApp Image 2026-10-13 at 7.23.19 PM.jpeg" },
-
-  // ---- Recuerditos para fiestas y eventos ----
-  { id: "baby-shower", category: "recuerditos", img: "images/WhatsApp Image 2026-10-13 at 7.23.23 PM (4).jpeg" },
-  { id: "navidad", category: "recuerditos", img: "images/WhatsApp Image 2026-10-13 at 7.23.26 PM (1).jpeg" },
-  { id: "mascotas", category: "recuerditos", img: "images/WhatsApp Image 2026-10-13 at 7.23.19 PM (1).jpeg" },
-  { id: "casa-nueva", category: "recuerditos", img: "images/WhatsApp Image 2026-10-13 at 7.23.24 PM (3).jpeg" },
-  { id: "boda-compromiso", category: "recuerditos", img: "images/WhatsApp Image 2026-10-13 at 7.23.16 PM (2).jpeg" },
-  { id: "patitos", category: "recuerditos", img: "images/WhatsApp Image 2026-10-13 at 7.23.17 PM (1).jpeg" },
-  { id: "unicornio", category: "recuerditos", img: "images/WhatsApp Image 2026-10-13 at 7.23.26 PM (2).jpeg" },
-  { id: "galactico", category: "recuerditos", img: "images/WhatsApp Image 2026-10-13 at 7.23.26 PM (4).jpeg" },
-  { id: "flores-variadas", category: "recuerditos", img: "images/WhatsApp Image 2026-10-13 at 7.23.22 PM (1).jpeg" },
-];
-
-const PRODUCT_I18N = {
-  menta: {
-    es: { name: "Menta", desc: "Jabón de glicerina vegetal, aroma a menta." },
-    en: { name: "Mint", desc: "Vegetable glycerin soap with a fresh mint scent." },
-    de: { name: "Minze", desc: "Pflanzliche Glycerinseife mit frischem Minzduft." },
-  },
-  cheesecake: {
-    es: { name: "Cheesecake", desc: "Jabón de glicerina vegetal, aroma a cheesecake." },
-    en: { name: "Cheesecake", desc: "Vegetable glycerin soap with a sweet cheesecake scent." },
-    de: { name: "Cheesecake", desc: "Pflanzliche Glycerinseife mit süßem Cheesecake-Duft." },
-  },
-  canela: {
-    es: { name: "Canela", desc: "Jabón de glicerina vegetal, aroma a canela." },
-    en: { name: "Cinnamon", desc: "Vegetable glycerin soap with a warm cinnamon scent." },
-    de: { name: "Zimt", desc: "Pflanzliche Glycerinseife mit warmem Zimtduft." },
-  },
-  uva: {
-    es: { name: "Uva", desc: "Jabón de glicerina vegetal con forma de racimo de uvas." },
-    en: { name: "Grape", desc: "Vegetable glycerin soap shaped like a bunch of grapes." },
-    de: { name: "Traube", desc: "Pflanzliche Glycerinseife in Form einer Weintraube." },
-  },
-  naranja: {
-    es: { name: "Naranja", desc: "Jabón de glicerina vegetal, aroma a naranja." },
-    en: { name: "Orange", desc: "Vegetable glycerin soap with a citrus orange scent." },
-    de: { name: "Orange", desc: "Pflanzliche Glycerinseife mit Orangenduft." },
-  },
-  lavanda: {
-    es: { name: "Lavanda", desc: "Jabón de glicerina vegetal, aroma a lavanda." },
-    en: { name: "Lavender", desc: "Vegetable glycerin soap with a calming lavender scent." },
-    de: { name: "Lavendel", desc: "Pflanzliche Glycerinseife mit beruhigendem Lavendelduft." },
-  },
-  flores: {
-    es: { name: "Flores", desc: "Jabón de glicerina vegetal, aroma floral." },
-    en: { name: "Flowers", desc: "Vegetable glycerin soap with a delicate floral scent." },
-    de: { name: "Blumen", desc: "Pflanzliche Glycerinseife mit zartem Blumenduft." },
-  },
-  limon: {
-    es: { name: "Limón", desc: "Jabón de glicerina vegetal, aroma a limón." },
-    en: { name: "Lemon", desc: "Vegetable glycerin soap with a fresh lemon scent." },
-    de: { name: "Zitrone", desc: "Pflanzliche Glycerinseife mit frischem Zitronenduft." },
-  },
-  "arbol-de-te": {
-    es: { name: "Árbol de Té", desc: "Jabón de glicerina vegetal, limpieza profunda y purificación." },
-    en: { name: "Tea Tree", desc: "Vegetable glycerin soap for deep, purifying cleansing." },
-    de: { name: "Teebaum", desc: "Pflanzliche Glycerinseife für eine tiefe, reinigende Wirkung." },
-  },
-  "miel-avena": {
-    es: { name: "Miel y Avena", desc: "Jabón de glicerina vegetal, miel y avena." },
-    en: { name: "Honey & Oats", desc: "Vegetable glycerin soap with honey and oats." },
-    de: { name: "Honig & Hafer", desc: "Pflanzliche Glycerinseife mit Honig und Hafer." },
-  },
-  "aloe-vera": {
-    es: { name: "Aloe Vera", desc: "Jabón de glicerina vegetal con aloe vera." },
-    en: { name: "Aloe Vera", desc: "Vegetable glycerin soap with aloe vera." },
-    de: { name: "Aloe Vera", desc: "Pflanzliche Glycerinseife mit Aloe Vera." },
-  },
-  "baby-shower": {
-    es: { name: "Baby Shower", desc: "Recuerdo de jabón para baby shower, niño o niña." },
-    en: { name: "Baby Shower", desc: "Soap favor for a baby shower, boy or girl." },
-    de: { name: "Babyparty", desc: "Seifen-Gastgeschenk für eine Babyparty, Junge oder Mädchen." },
-  },
-  navidad: {
-    es: { name: "Navidad", desc: "Set de jabones navideños: copos de nieve, árbol y estrella." },
-    en: { name: "Christmas", desc: "Christmas soap set: snowflake, tree, and star." },
-    de: { name: "Weihnachten", desc: "Weihnachtliches Seifenset: Schneeflocke, Baum und Stern." },
-  },
-  mascotas: {
-    es: { name: "Mascotas", desc: "Jabones con forma de huellita y huesito para amantes de las mascotas." },
-    en: { name: "Pets", desc: "Paw print and bone-shaped soaps for pet lovers." },
-    de: { name: "Haustiere", desc: "Seifen in Pfoten- und Knochenform für Tierliebhaber." },
-  },
-  "casa-nueva": {
-    es: { name: "Casa Nueva", desc: "Recuerdo de jabón para estrenar casa." },
-    en: { name: "New Home", desc: "Soap favor to celebrate a new home." },
-    de: { name: "Neues Zuhause", desc: "Seifen-Geschenk zum Einzug ins neue Zuhause." },
-  },
-  "boda-compromiso": {
-    es: { name: "Boda / Compromiso", desc: "Recuerdo de jabón con manos entrelazadas y rosas, ideal para bodas." },
-    en: { name: "Wedding / Engagement", desc: "Soap favor with clasped hands and roses, perfect for weddings." },
-    de: { name: "Hochzeit / Verlobung", desc: "Seifen-Geschenk mit ineinander verschlungenen Händen und Rosen, ideal für Hochzeiten." },
-  },
-  patitos: {
-    es: { name: "Patitos", desc: "Jabones de patitos de hule, ideales para baby shower." },
-    en: { name: "Rubber Ducks", desc: "Rubber duck-shaped soaps, perfect for a baby shower." },
-    de: { name: "Gummienten", desc: "Seifen in Gummienten-Form, ideal für eine Babyparty." },
-  },
-  unicornio: {
-    es: { name: "Unicornio", desc: "Jabón artesanal con forma de unicornio, natural y vegano." },
-    en: { name: "Unicorn", desc: "Handmade unicorn-shaped soap, natural and vegan." },
-    de: { name: "Einhorn", desc: "Handgefertigte Seife in Einhornform, natürlich und vegan." },
-  },
-  galactico: {
-    es: { name: "Galáctico", desc: "Jabón decorativo con efecto galaxia." },
-    en: { name: "Galaxy", desc: "Decorative soap with a galaxy effect." },
-    de: { name: "Galaktisch", desc: "Dekorative Seife mit Galaxie-Effekt." },
-  },
-  "flores-variadas": {
-    es: { name: "Flores Variadas", desc: "Recuerdo con variedad de flores decorativas." },
-    en: { name: "Assorted Flowers", desc: "Favor featuring an assortment of decorative flowers." },
-    de: { name: "Verschiedene Blumen", desc: "Geschenk mit einer Auswahl dekorativer Blumen." },
-  },
-};
+// Los productos viven en el backend (Cosmos DB) para que Felicia los pueda
+// agregar, editar o eliminar ella misma desde el panel — ver loadApiProducts()
+// más abajo. Se cargan vacíos aquí y se llenan al conectar con la API, con
+// respaldo en localStorage si la API no responde.
+let PRODUCTS = [];
+let PRODUCT_I18N = {};
 
 function localized(product) {
   const tr = PRODUCT_I18N[product.id][currentLang];
   return { ...product, name: tr.name, desc: tr.desc };
 }
 
-const AROMAS = PRODUCTS.filter((p) => p.category === "aromas");
-const RECUERDITOS = PRODUCTS.filter((p) => p.category === "recuerditos");
+let AROMAS = PRODUCTS.filter((p) => p.category === "aromas");
+let RECUERDITOS = PRODUCTS.filter((p) => p.category === "recuerditos");
+
+// ---------------- Products come entirely from the API (Felicia's panel) ----------------
+// Both the 20 original soaps and anything she adds/edits afterward live in
+// the same backend — this just rebuilds PRODUCTS/PRODUCT_I18N from whatever
+// the API returns. Products with saved EN/DE translations (the original 20)
+// keep them; anything Felicia adds herself only has her Spanish text, shown
+// as-is in all 3 languages (she doesn't type translations).
+function setProductsFromApi(apiItems) {
+  PRODUCTS = [];
+  PRODUCT_I18N = {};
+  apiItems.forEach((item) => {
+    if (!item || !item.id) return;
+    PRODUCTS.push({ id: item.id, category: item.category, img: item.photoUrl, price: item.price ?? null });
+    const esName = item.name;
+    const esDesc = item.desc || "";
+    PRODUCT_I18N[item.id] = {
+      es: { name: esName, desc: esDesc },
+      en: item.i18n && item.i18n.en ? item.i18n.en : { name: esName, desc: esDesc },
+      de: item.i18n && item.i18n.de ? item.i18n.de : { name: esName, desc: esDesc },
+    };
+  });
+  AROMAS = PRODUCTS.filter((p) => p.category === "aromas");
+  RECUERDITOS = PRODUCTS.filter((p) => p.category === "recuerditos");
+}
+
+async function loadApiProducts() {
+  try {
+    const res = await fetch(`${API_BASE}/api/licha/products`);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    if (!Array.isArray(data) || data.length === 0) throw new Error("API devolvió una lista vacía");
+    localStorage.setItem("apiProductsCache", JSON.stringify(data));
+    setProductsFromApi(data);
+    renderGrids();
+    renderStats();
+  } catch (err) {
+    console.warn("No se pudieron cargar los productos de la API, usando caché local", err);
+    try {
+      const cached = JSON.parse(localStorage.getItem("apiProductsCache") || "[]");
+      if (Array.isArray(cached) && cached.length) {
+        setProductsFromApi(cached);
+        renderGrids();
+        renderStats();
+      }
+    } catch (e) {
+      // sin caché disponible — el catálogo queda vacío hasta que la API responda
+    }
+  }
+}
 
 // Curated list of best-sellers, flagged with a badge on their card
 const FAVORITE_IDS = new Set(["uva", "lavanda", "navidad", "unicornio", "baby-shower", "cheesecake"]);
@@ -625,7 +558,7 @@ function cardHTML(p, idx, gridName) {
       <div class="card-body">
         <span class="tag ${tagClass}">${tagText}</span>
         <h3>${p.name}</h3>
-        <p>${p.desc}</p>
+        ${p.category === "recuerditos" ? `<p>${p.desc}</p>` : ""}
         <span class="price">${priceLabel(priceFor(p))}</span>
         <div class="qty-control" data-id="${p.id}"></div>
       </div>
@@ -729,7 +662,9 @@ function renderLightbox() {
   lbTag.textContent = p.category === "aromas" ? t("tagAroma") : t("tagRecuerdo");
   lbTag.className = `tag ${p.category === "aromas" ? "tag-aroma" : "tag-recuerdo"}`;
   document.getElementById("lightbox-title").textContent = p.name;
-  document.getElementById("lightbox-desc").textContent = p.desc;
+  const lbDesc = document.getElementById("lightbox-desc");
+  lbDesc.textContent = p.category === "recuerditos" ? p.desc : "";
+  lbDesc.style.display = p.category === "recuerditos" ? "" : "none";
   document.getElementById("lightbox-price").textContent = priceLabel(priceFor(p));
   const lbQty = document.getElementById("lightbox-qty");
   lbQty.dataset.id = p.id;
@@ -845,4 +780,5 @@ document.addEventListener("DOMContentLoaded", () => {
   initCartDrawer();
   setLanguage(currentLang);
   updateCartBar();
+  loadApiProducts();
 });

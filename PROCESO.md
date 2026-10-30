@@ -356,6 +356,147 @@ correctamente. La ubicación se limpia después de cada envío (no se guarda en
 `localStorage`, a diferencia del carrito, por ser un dato más sensible y
 puntual).
 
+## 26. Panel para que Felicia agregue productos ella misma (2026-10-29)
+
+Monica pidió que Felicia pudiera subir fotos de productos nuevos con su precio
+sin que nadie toque `app.js`. Se construyó un backend compartido en Azure
+(reutilizando su cuenta — la suscripción vieja estaba deshabilitada por
+inactividad sin causa de pago, así que se creó una suscripción nueva con la
+misma tarjeta, vía `az account alias create`) y un panel de administración
+nuevo en este repo:
+
+- **Infraestructura Azure** (grupo `rg-moroludero-catalogos`, región Mexico
+  Central, compartida con Taller KinTro para quedar dentro de un solo nivel
+  gratis):
+  - **Cosmos DB** (`moroludero-catalogos-db`, nivel gratis: 1000 RU/s + 25GB
+    de por vida) — base `catalogos`, contenedor `licha-products` (partition
+    key `/category`).
+  - **Storage Account** (`moroluderocatalogos`) — contenedor `licha-fotos`
+    (lectura pública de blobs) para las fotos que suba Felicia.
+  - **Function App** (`moroludero-catalogos-api`, Node 24, plan consumo) con
+    **Identidad Administrada** — nunca se generó ni guardó ninguna clave de
+    Cosmos/Storage; los permisos se dieron por RBAC (roles "Cosmos DB Built-in
+    Data Contributor" y "Storage Blob Data Contributor" sobre la identidad del
+    Function App). Repo del código: `C:\Users\morol\OneDrive\Documents\MoroluderoCatalogosAPI`
+    (no es parte de este repo — es compartido con Taller KinTro).
+  - **Application Insights** conectado, pensado para la analítica por
+    producto (vistas, pedidos por WhatsApp) que Monica quiere a futuro.
+  - **Alerta de presupuesto** de $5 USD/mes (avisos a moroludero@gmail.com en
+    50% y 100%) — costo real esperado: ~$0/mes, quizás centavos por las fotos.
+- **Endpoints**: `GET/POST /api/licha/products` (el GET es público; el POST
+  requiere el header `x-admin-password`) y `DELETE /api/licha/products/{id}`.
+- **`admin.html`** (nuevo, en este repo) — página con contraseña propia
+  (no se documenta aquí a propósito, para no dejarla en texto plano en un
+  repo público — Monica la tiene por chat), instalable en el teléfono como
+  ícono de pantalla de inicio (`admin-manifest.json` + íconos
+  `images/admin-icon-*.png`, estilo "JL" sage). Formulario: nombre,
+  categoría, precio especial opcional, foto (con `capture="environment"`
+  para abrir la cámara directo en celular). Debajo, lista de lo que Felicia
+  ha agregado con botón "Quitar".
+- **`app.js`**: los productos de la API se mezclan con `PRODUCTS`/`PRODUCT_I18N`
+  al cargar (`loadApiProducts()`), con caché en `localStorage` y respaldo
+  silencioso a solo los productos fijos si la API no responde — el sitio
+  nunca se rompe por esto. Los productos de Felicia no tienen traducción
+  EN/DE (se muestran igual en los 3 idiomas); es una limitación conocida, no
+  un bug.
+
+Verificado end-to-end con Playwright (contra la API real en Azure, no solo en
+local): login del panel, subir producto con foto real, aparece en la lista del
+panel y en el catálogo público (contador de "Aromas disponibles" sube
+correctamente), eliminar producto, sin errores de consola en ningún punto.
+
+**Pendiente:** si en el futuro se agregan más negocios a esta misma
+infraestructura (Monica mencionó que lo planea), conviene cambiar el esquema
+de contraseña-por-variable-de-entorno por una colección real de cuentas en
+Cosmos DB — hoy es manual pero funciona bien para 2 negocios.
+
+## 27. Panel de administración unificado, con cuentas reales (2026-10-30)
+
+Después de construir el panel de productos y el de disponibilidad/galería de
+Taller KinTro por separado, Monica pidió unificarlos en un solo sitio con
+cuentas reales por negocio y feature flags — investigué cómo lo resuelven
+sistemas reales (patrón de AWS SaaS Lens / LaunchDarkly para SaaS
+multi-tenant: cuentas separadas de los flags, un documento de flags por
+tenant evaluado al cargar) antes de construirlo. **El `admin.html` que vivía
+en este repo se eliminó** — fue reemplazado por un panel nuevo, compartido
+con Taller KinTro, que vive fuera de ambos repos:
+
+- **Sitio**: hosting estático de Azure (Storage Account `moroluderocatalogos`,
+  contenedor `$web`), repo fuente local en
+  `C:\Users\morol\OneDrive\Documents\MoroluderoAdminPanel` (no es un repo de
+  GitHub — se sube directo con `az storage blob upload-batch`).
+- **Cuentas reales** en Cosmos DB (contenedor `accounts`): usuario +
+  contraseña con hash (`scrypt`, nunca en texto plano) + a qué negocio
+  pertenece. Felicia usa el mismo usuario `felicia` con su contraseña de
+  siempre.
+- **Feature flags por negocio** (contenedor `businesses`): un documento con
+  `features: { products, gallery, availability }` — al entrar, el panel solo
+  muestra las secciones que ese negocio tiene activas. Jabones Licha:
+  `products: true`, el resto `false`.
+- **Sesiones firmadas (JWT)** en vez de la contraseña compartida fija de
+  antes — `POST /api/auth/login` devuelve un token que dura 30 días; los
+  endpoints de escritura (`lichaProductsSave`/`Delete`) ahora exigen ese
+  token y verifican que pertenezca al negocio `licha` (un token de otro
+  negocio no puede tocar estos datos — probado con Playwright).
+- Agregar un tercer negocio después = un documento nuevo en `businesses` +
+  una cuenta nueva en `accounts`, no código nuevo.
+
+Verificado con Playwright: login de Felicia muestra solo la sección de
+productos (no disponibilidad ni galería, que son de KinTro), agregar/quitar
+un producto funciona igual que antes, y un token de otro negocio usado
+contra este endpoint es rechazado (401).
+
+## 28. Migración de los 20 productos originales al backend (2026-10-30)
+
+Monica pidió que Felicia pudiera editar/eliminar también los 20 jabones que
+ya existían (no solo lo que agregue de ahora en adelante). Antes de
+implementar, investigué el patrón de UX recomendado para "editar un registro
+existente" en paneles simples (formularios con validación y foto, no un solo
+campo) — la referencia apunta a reusar el mismo formulario en modo edición
+en vez de edición en línea o un modal aparte, que es lo que se construyó.
+
+- **Migración real** (`MoroluderoCatalogosAPI/scripts/migrate-licha.js`): las
+  20 fotos se subieron a Blob Storage y los 20 productos se crearon en Cosmos
+  DB, **conservando las traducciones EN/DE** de cada uno (nuevo campo `i18n`
+  en el documento) y la descripción en español (`desc`), para no perder nada
+  del trabajo de traducción ya hecho.
+- **`app.js`**: se eliminó el arreglo `PRODUCTS`/`PRODUCT_I18N` hardcodeado
+  (130+ líneas) — ahora el catálogo completo (los 20 originales + lo que
+  agregue Felicia) viene siempre de la API (`setProductsFromApi()`, antes
+  `mergeApiProducts()`), con el mismo respaldo en `localStorage` si la API no
+  responde. Si la API devuelve una lista vacía se trata como error (no se
+  vacía el catálogo en vivo por un bug pasajero del backend).
+- **Backend** (`lichaProductsSave.js`): al editar un producto existente
+  (se manda su `id`), el backend lee el documento actual antes de guardar y
+  conserva su `i18n` y `desc` — el formulario simple de Felicia solo maneja
+  nombre, categoría, precio y foto, así que nunca los toca ni los borra por
+  accidente. También maneja el caso de que cambie la categoría de un
+  producto (borra el documento de la partición vieja para no dejar un
+  duplicado).
+- **Panel unificado**: cada producto en la lista ahora tiene un botón
+  **"Editar"** además de "Quitar" — carga sus datos en el mismo formulario de
+  "Agregar producto" (título cambia a "Editando: <nombre>", la foto se vuelve
+  opcional con la nota "déjalo vacío para conservar la foto actual", y
+  aparece "Cancelar edición").
+
+Verificado con Playwright de punta a punta: el catálogo público sigue
+mostrando los 20 productos sin errores de consola, el inglés de "Uva" sigue
+siendo "Grape" (confirma que `i18n` sobrevivió la migración), Felicia edita
+el precio de "Uva" desde el panel y el sitio público lo refleja al instante,
+y se revirtió el precio de prueba al terminar.
+
+## 29. Quitar la descripción de las tarjetas de Aromas (2026-10-30)
+
+Monica notó que la descripción de cada jabón de Aromas (ej. "Jabón de
+glicerina vegetal, aroma a menta") era redundante — ya se explica una vez
+que todos son de glicerina vegetal, y el aroma ya lo dice el nombre. Los
+Recuerditos sí la conservan porque ahí sí aporta (ej. "Recuerdo de jabón
+para baby shower, niño o niña"). Se quitó el `<p>${p.desc}</p>` de la tarjeta
+y del lightbox solo para `category === "aromas"`; Recuerditos no cambió.
+Verificado con Playwright: las tarjetas de Aromas ya no muestran el párrafo,
+las de Recuerditos sí, y el lightbox de un aroma tampoco muestra la
+descripción — sin errores de consola.
+
 ## Pendientes
 
 - [ ] Confirmar que el botón de WhatsApp (+53 5 3335221) es el número correcto y está activo
@@ -363,7 +504,8 @@ puntual).
 - [ ] Agregar el link del sitio al perfil de Instagram/Facebook si aún no está
 - [ ] Crear la cuenta gratis en goatcounter.com (código de sitio "jabones-licha") para activar la analítica
 - [ ] Crear la cuenta gratis en snapwidget.com, conectar @jaboneslicha, y pegar el iframe real en `index.html` (punto 23) para activar el feed de Instagram
-- [ ] `git push` de todos los cambios de esta sesión (2026-10-26 y 2026-10-27) cuando Monica confirme — siguen solo en local
+- [ ] Darle a Felicia el link del panel unificado (ver punto 27) y su usuario/contraseña (se los pasé a Monica por chat, no quedan escritos en este repo), y mostrarle cómo instalarlo en su pantalla de inicio
+- [ ] `git push` de todos los cambios de esta sesión (2026-10-26, 2026-10-27 y 2026-10-29) cuando Monica confirme — siguen solo en local. La API de Azure ya está desplegada y en vivo (es infraestructura aparte, no parte de este repo), aunque el sitio público/`admin.html` de este repo aún no.
 
 ## Cómo editar el catálogo más adelante
 
