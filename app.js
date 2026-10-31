@@ -14,6 +14,17 @@ const CONFIG = {
 // still works with just the products hardcoded below.
 const API_BASE = "https://moroludero-catalogos-api.azurewebsites.net";
 
+// Beacon anónimo de analítica para el panel de Felicia — nunca debe romper
+// la experiencia del visitante si falla, por eso el .catch() silencioso.
+function trackEvent(type, entityId, entityName) {
+  fetch(`${API_BASE}/api/analytics/track`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ business: "licha", type, entityId, entityName }),
+    keepalive: true,
+  }).catch(() => {});
+}
+
 function priceFor(product) {
   return product.price != null ? product.price : CONFIG.categoryPrices[product.category];
 }
@@ -515,6 +526,9 @@ function initCartDrawer() {
     const notes = document.getElementById("cartNotes").value.trim();
     const msg = waCartMessage(name, notes);
     window.open(`https://wa.me/${CONFIG.whatsappNumber}?text=${encodeURIComponent(msg)}`, "_blank", "noopener");
+    Object.keys(CART).forEach((id) => {
+      trackEvent("product_order", id, PRODUCT_I18N[id] ? PRODUCT_I18N[id].es.name : id);
+    });
     CART = {};
     saveCart();
     renderAllQtyControls();
@@ -639,6 +653,10 @@ function openLightbox(list, index) {
   lb.setAttribute("aria-hidden", "false");
   document.body.style.overflow = "hidden";
   document.getElementById("lightbox-close").focus();
+  const p = list[index];
+  // Siempre se manda el nombre en español (canónico), no el traducido que
+  // ve el visitante — así "Uva" y "Grape" no cuentan como productos distintos.
+  trackEvent("product_view", p.id, PRODUCT_I18N[p.id] ? PRODUCT_I18N[p.id].es.name : p.name);
 }
 
 function closeLightbox() {
